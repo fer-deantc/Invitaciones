@@ -1,0 +1,20 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Citlali//Halloween de Heroes y Villanos//ES
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:citlali-halloween-20261017@invitacion
+DTSTAMP:20260928T160000Z
+DTSTART:20261018T020000Z
+DTEND:20261018T080000Z
+SUMMARY:Halloween de Héroes y Villanos · Cumpleaños de Citlali
+LOCATION:Calzada de las Arcadas 77\, Álvaro Obregón\, Ciudad de México
+DESCRIPTION:Dress code: héroe o villano. Trae lo que vayas a tomar.
+BEGIN:VALARM
+TRIGGER:-P1D
+ACTION:DISPLAY
+DESCRIPTION:Mañana es la fiesta de Citlali
+END:VALARM
+END:VEVENT
+END:VCALENDAR

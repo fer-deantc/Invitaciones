@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fer · Veinte</title>
+<meta name="theme-color" content="#F0F1EB">
+<meta name="description" content="Invitación al cumpleaños 20 de Fer.">
+<!-- Que los buscadores no la levanten: la página lleva dirección y teléfono,
+     y está pensada para quien reciba el link, no para andar en Google. -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="is-locked">
+
+<!-- ===== La manzana de seis franjas (1977-1998) =====
+     Se dibuja una sola vez y se reusa con <use>. Las franjas son
+     rectángulos recortados contra la silueta; la primera es más
+     alta para que la hoja quede completa en verde, como el original. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="manzana" viewBox="0 0 170 170">
+    <clipPath id="cpManzana">
+      <path d="M96 27.5c5.6-6.9 9.5-16.5 8.4-26.1-8.2.4-18.1 5.5-24 12.4-5.3 6.1-10 15.9-8.7 25.3 9.1.7 18.5-4.7 24.3-11.6z"/>
+      <path d="M104.3 40.6c-13.3-.8-24.6 7.6-30.9 7.6s-16-7.2-26.4-7c-13.6.2-26.1 7.9-33.1 20.1-14.1 24.5-3.7 60.8 10 80.7 6.7 9.8 14.7 20.8 25.2 20.4 10.1-.4 13.9-6.5 26.1-6.5s15.6 6.5 26.3 6.3c10.9-.2 17.8-10 24.4-19.8 7.7-11.3 10.9-22.3 11.1-22.9-.2-.1-21.3-8.2-21.5-32.4-.2-20.2 16.5-29.9 17.3-30.4-9.5-14-24.2-15.6-29.3-16.1z"/>
+    </clipPath>
+    <g clip-path="url(#cpManzana)">
+      <rect x="0" y="0"     width="170" height="62"   fill="#61BB46"/>
+      <rect x="0" y="62"    width="170" height="21.6" fill="#FDB827"/>
+      <rect x="0" y="83.6"  width="170" height="21.6" fill="#F5821F"/>
+      <rect x="0" y="105.2" width="170" height="21.6" fill="#E03A3E"/>
+      <rect x="0" y="126.8" width="170" height="21.6" fill="#963D97"/>
+      <rect x="0" y="148.4" width="170" height="21.6" fill="#009DDC"/>
+    </g>
+  </symbol>
+</svg>
+
+<!-- ===== Barra de menús, como la del Mac de siempre ===== -->
+<div class="menubar">
+  <svg class="manzana manzana--menu" viewBox="0 0 170 170" aria-hidden="true"><use href="#manzana"/></svg>
+  <span class="menubar__titulo">Fer</span>
+  <span class="menubar__reloj">Sáb 29 ago · 16:30</span>
+</div>
+
+<canvas id="scraps" aria-hidden="true"></canvas>
+<div id="stickerLayer" aria-hidden="true"></div>
+
+<!-- ===== Invitación ===== -->
+<main id="invite">
+
+  <section class="hero">
+    <p class="eyebrow">Estás Invitado</p>
+
+    <h1 class="hero__title">El Cumple de Fer</h1>
+
+    <!-- El "20" y su estela los arma js/veinte.js -->
+    <div class="bignum" id="bignum" role="img" aria-label="Veinte"></div>
+
+    <p class="hero__years">Veinte Años</p>
+
+    <p class="hero__date">Sábado 29 de agosto · 16:30</p>
+    <p class="hero__nota">Una reunión tranquila para platicar, escuchar música y pasar la tarde.</p>
+
+    <div class="countdown" id="countdown">
+      <div class="cd"><b id="cd-d">--</b><i>días</i></div>
+      <div class="cd"><b id="cd-h">--</b><i>horas</i></div>
+      <div class="cd"><b id="cd-m">--</b><i>min</i></div>
+      <div class="cd"><b id="cd-s">--</b><i>seg</i></div>
+    </div>
+  </section>
+
+  <!-- ===== Los datos ===== -->
+  <section class="plan">
+    <h2 class="section-title">El Plan</h2>
+    <p class="section-sub">Todo lo que necesitas saber.</p>
+
+    <dl class="cards">
+
+      <div class="card">
+        <dt class="card__label">Lugar</dt>
+        <dd class="card__val">Mi casa</dd>
+        <dd class="card__note">Cerrada de La Romería #47, Colina del Sur, Álvaro Obregón, CDMX.</dd>
+        <dd class="card__extra">
+          <a class="chip" target="_blank" rel="noopener"
+             href="https://maps.apple.com/?q=Cerrada%20de%20La%20Romer%C3%ADa%2047%2C%20Colina%20del%20Sur%2C%20%C3%81lvaro%20Obreg%C3%B3n%2C%20Ciudad%20de%20M%C3%A9xico">Apple Maps</a>
+          <a class="chip" target="_blank" rel="noopener"
+             href="https://www.google.com/maps/search/?api=1&amp;query=Cerrada%20de%20La%20Romer%C3%ADa%2047%2C%20Colina%20del%20Sur%2C%20%C3%81lvaro%20Obreg%C3%B3n%2C%20Ciudad%20de%20M%C3%A9xico">Google Maps</a>
+        </dd>
+      </div>
+
+      <div class="card">
+        <dt class="card__label">Hora</dt>
+        <dd class="card__val">Sábado 29 de agosto, 16:30</dd>
+        <dd class="card__note">Puedes llegar a la hora que te acomode.</dd>
+        <dd class="card__extra">
+          <button class="chip" id="btnCal" type="button">Agregar al Calendario</button>
+        </dd>
+      </div>
+
+      <div class="card">
+        <dt class="card__label">Playlist</dt>
+        <dd class="card__val">¡20!</dd>
+        <dd class="card__note">Suena de fondo al abrir la invitación. Ábrela y agrega las canciones que quieras.</dd>
+        <dd class="card__extra">
+          <a class="disco" target="_blank" rel="noopener"
+             href="https://open.spotify.com/playlist/216IrVfZewZDIIvL3HvHvS?si=d8d1659c43df41b6&amp;pt=d5940d64f3a081a688e91357063c45bb">
+            <img class="disco__arte" src="assets/playlist.jpg" alt="" width="478" height="640">
+            <span class="disco__txt">
+              <span class="disco__nombre">¡20!</span>
+              <span class="disco__meta">Playlist en Spotify</span>
+            </span>
+            <span class="disco__ir" aria-hidden="true">↗</span>
+          </a>
+        </dd>
+      </div>
+
+      <div class="card">
+        <dt class="card__label">Qué Llevar</dt>
+        <dd class="card__val">Solo tu vaso o termo</dd>
+        <dd class="card__note">Y lo que quieras tomar, sea lo que sea. De ahí en fuera no hace falta traer nada.</dd>
+      </div>
+
+    </dl>
+  </section>
+
+  <!-- ===== RSVP ===== -->
+  <section class="rsvp">
+    <h2 class="rsvp__title">¿Vienes?</h2>
+    <p class="rsvp__sub">Avísame para tenerte en cuenta.</p>
+    <!-- js/main.js le pone el href con el número de WhatsApp -->
+    <a class="btn" id="btnRsvp" role="button" href="#">Confirmar Asistencia</a>
+    <p class="rsvp__hint" id="rsvpHint">Se abre WhatsApp con el mensaje listo.</p>
+  </section>
+
+  <footer class="foot">
+    <svg class="manzana manzana--pie" viewBox="0 0 170 170" aria-hidden="true"><use href="#manzana"/></svg>
+    <p class="foot__line">Nos vemos el 29</p>
+    <p class="foot__tiny">Puedes arrastrar los stickers.</p>
+  </footer>
+
+</main>
+
+<!-- ===== HUD ===== -->
+<div id="hud" hidden>
+  <button class="hud__btn" id="btnShake" type="button">Sacudir</button>
+  <button class="hud__btn" id="btnSound" type="button" aria-pressed="true">Sonido</button>
+</div>
+
+<!-- ===== Pantalla de bloqueo ===== -->
+<div id="lock">
+  <div class="lock__inner">
+    <svg class="manzana manzana--lock" viewBox="0 0 170 170" aria-hidden="true"><use href="#manzana"/></svg>
+    <!-- El "hola" del Macintosh de 1984, que la iMac repitió en el 98 -->
+    <p class="lock__hola">hola.</p>
+    <h2 class="lock__title">Algo Está por Pasar</h2>
+    <button id="btnUnlock" class="btn btn--lock" type="button" disabled>
+      <span class="btn-unlock__label">Oprime para desbloquear la invitación</span>
+      <span class="btn-unlock__loading">Cargando</span>
+    </button>
+  </div>
+</div>
+
+<!-- Reproductor de Spotify escondido: sólo está para que la playlist suene
+     de fondo. No se puede ocultar con display:none (deja de sonar) ni
+     mandar fuera de la pantalla (el iframe viene diferido y no cargaría).
+     Se queda en una esquina, transparente. Se controla con el botón de
+     Sonido. -->
+<div class="reproductor-oculto" id="spotifyWrap" aria-hidden="true"><div id="spotifyBox"></div></div>
+
+<script src="js/physics.js"></script>
+<script src="js/veinte.js"></script>
+<script src="js/scraps.js"></script>
+<script src="js/playlist.js"></script>
+<script src="js/main.js"></script>
+<!-- Va al final a propósito: para cuando llega, playlist.js ya dejó puesto
+     onSpotifyIframeApiReady y la caja del reproductor ya existe. -->
+<script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+</body>
+</html>
