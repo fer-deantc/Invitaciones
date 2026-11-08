@@ -47,7 +47,7 @@ window.FIESTA = {
   // Canción: ruta a un .mp3 o .m4a dentro de esta carpeta (por ejemplo
   // 'audio/cancion.mp3'). Mientras esté vacío suena una cajita musical
   // tocando "Noche de paz", generada por la propia página.
-  musica: '',
+  musica: 'musica.m4a',
   // De 0 a 1.
   volumen: 0.5
 };
