@@ -317,16 +317,20 @@
 
   /* ---------- Decorado: marcos a mano y guirnaldas en tarjetas ---------- */
   const sizes = new WeakMap();
+  // si el texto de una tarjeta cambia (p. ej. el aviso de agitar), el marco se vuelve a dibujar a su medida
+  let rt = 0;
+  const ro = window.ResizeObserver ? new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(P.decorate, 60); }) : null;
   P.decorate = function () {
     document.querySelectorAll('.posada-sign').forEach(s => { if (!s.dataset.done) { P.posadaSign(s); s.dataset.done = 1; } });
     document.querySelectorAll('[data-frame]').forEach(box => {
       const w = Math.round(box.offsetWidth), h = Math.round(box.offsetHeight);
+      if (ro && !box.dataset.ro) { ro.observe(box); box.dataset.ro = 1; }
       if (!w || !h) return;
       const k = w + 'x' + h;
       if (sizes.get(box) === k) return;
       sizes.set(box, k);
       let f = box.querySelector(':scope > svg.frame'), gl = box.querySelector(':scope > svg.lights');
-      if (!f) { f = el('svg', { class: 'frame', 'aria-hidden': 'true' }); box.prepend(f); }
+      if (!f) { f = el('svg', { class: 'frame', 'aria-hidden': 'true', preserveAspectRatio: 'none' }); box.prepend(f); }
       f.setAttribute('viewBox', `0 0 ${w} ${h}`); f.innerHTML = '';
       P.frame(f, w, h);
       if (box.dataset.frame === 'lights') {
@@ -336,6 +340,5 @@
       }
     });
   };
-  let rt = 0;
   addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(P.decorate, 200); });
 })();
