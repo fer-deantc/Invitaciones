@@ -8,7 +8,7 @@
    ========================================================= */
 (function () {
   'use strict';
-  const P = window.POSADA, C = window.FIESTA;
+  const P = window.POSADA = window.POSADA || {}, C = window.FIESTA;
   const $ = s => document.querySelector(s);
   const $$ = s => [...document.querySelectorAll(s)];
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -75,12 +75,11 @@
   const msg = C.mensaje || `${C.casa}: confirmo que voy a la posada del ${DIAS[dow]} ${D} de ${MESES[M - 1]}. Ahí nos vemos.`;
   $('#wa').href = `https://wa.me/${C.whatsapp}?text=${enc(msg)}`;
 
-  /* ---------- Villa ---------- */
-  P.villa.init();
-  const relayout = () => P.villa.layout();
-  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => P.villa.layout(true));
+  /* ---------- Sala de la entrada ---------- */
+  P.plaqueDate = `${D} · ${ROMANOS(M)} · ${ROMANOS(Y)}`;
+  P.paintRoom();
   let rt = 0;
-  addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(relayout, 250); });
+  addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (!opened) P.paintRoom(); }, 250); });
 
   /* ---------- Música ---------- */
   const soundBtn = $('#sound');
@@ -92,22 +91,28 @@
   document.addEventListener('visibilitychange', () => P.audio.pauseHidden(document.hidden));
 
   /* ---------- Apertura ---------- */
-  const invite = $('#invite');
+  const invite = $('#invite'), gate = $('#gate');
   let opened = false;
   P.reveal = () => {
     if (opened) return;
-    opened = true;
-    $('#gate').hidden = true;
+    opened = true; P.opened = true;
+    gate.hidden = true;
     invite.inert = false;
     document.documentElement.classList.remove('locked');
     document.body.classList.add('unlocked');
     window.scrollTo(0, 0);
-    P.villa.layout(true);
-    P.villa.start();
+    if (P.villa) P.villa.start();
     P.audio.start();
     soundBtn.hidden = !P.audio.available;
     P.flurry();
   };
+  // Sin 3D (teléfono muy viejo o WebGL apagado): el botón abre directo.
+  P.noGlobe = () => {
+    if (P.globeReady) return;
+    gate.classList.add('nogl', 'ready');
+    $('#open').addEventListener('click', () => { P.audio.unlock(); P.reveal(); });
+  };
+  setTimeout(() => { if (!P.globeReady && !opened) P.noGlobe(); }, 9000);
 
   const cue = $('#cue');
   cue.addEventListener('click', e => { e.preventDefault(); $('#la-noche').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); });

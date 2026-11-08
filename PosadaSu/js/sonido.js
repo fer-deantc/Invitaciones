@@ -12,7 +12,7 @@
    ========================================================= */
 (function () {
   'use strict';
-  const P = window.POSADA, C = window.FIESTA;
+  const P = window.POSADA = window.POSADA || {}, C = window.FIESTA;
   let ac = null, master, sfx, music, verb, el = null, elSrc = null;
   let mode = null, on = false, timer = null, loopStart = 0, idx = 0;
 
@@ -113,6 +113,17 @@
         partial(fq * 1.51, t0, v * .5, .002, .14, sfx, false);
         partial(fq * 2.74, t0, v * .3, .001, .08, sfx, false);
       }
+    },
+
+    // la base de madera al volver a la mesa
+    thud(k = 1) {
+      if (!ac) return;
+      const t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain();
+      o.type = 'sine'; o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(60, t + .12);
+      env(g, t, .25 * k, .004, .18); o.connect(g).connect(sfx); o.start(t); o.stop(t + .25);
+      const n = noise(.12), lp = ac.createBiquadFilter(), gn = ac.createGain();
+      lp.type = 'lowpass'; lp.frequency.value = 900; env(gn, t, .12 * k, .002, .08);
+      n.connect(lp).connect(gn).connect(sfx); n.start(t); n.stop(t + .12);
     },
 
     clink() {

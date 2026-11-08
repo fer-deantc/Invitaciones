@@ -13,8 +13,8 @@ window.FIESTA = {
   // En casa de quién es la posada.
   casa: 'Su',
 
-  // POR CONFIRMAR: fecha y hora de inicio, en horario de la Ciudad de México.
-  fecha: '2026-12-19',
+  // Fecha y hora de inicio, en horario de la Ciudad de México.
+  fecha: '2026-12-05',
   hora: '19:30',
   // No sabemos a qué hora termina: el calendario reserva estas horas.
   duracionHoras: 5,
