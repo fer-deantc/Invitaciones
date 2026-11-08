@@ -104,6 +104,8 @@
     if (!td) { td = document.createElement('div'); td.id = 'teddyGate'; td.setAttribute('aria-hidden', 'true'); gate.appendChild(td); }
     td.innerHTML = '';
     [A.teddy(0, true, 3), A.teddy(1, true, 3)].forEach((c, k) => { c.className = 'fr f' + k; td.appendChild(c); });
+    // su etiqueta, para que sepan que es él
+    const tag = A.teddyTag(); tag.className = 'ttag'; td.appendChild(tag);
   }
 
   /* ---------- Nieve dentro de la esfera (2D) ---------- */

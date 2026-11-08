@@ -375,10 +375,16 @@ async function build() {
   card(A.gifts(), 2.1, 2.6, 2.8);
   card(A.sled(true), 1.3, -4.8, -1.8);
   const tSit = [texOf(A.teddy(0, true)), texOf(A.teddy(1, true))];
-  const teddySit = card(tSit[0], 1.45, 2.2, 3.3, { y: 1 });
-  actors.push((dt, t) => { teddySit.material.map = tSit[Math.floor(t * 3) % 2]; });
+  const teddySit = card(tSit[0], 1.9, 2.2, 3.3, { y: 1 });
+  // Teddy también aquí, en primer plano, junto a los venados, con su letrero
+  if (document.fonts && document.fonts.ready) await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 1200))]);
+  const signT = texOf(A.teddySign());
+  card(signT, 1.5, 4.2, 4.4);
+  const teddyHero = card(tSit[0], 2.6, -7.5, 37.5); shadowFor(teddyHero, 2.2).position.set(-7.2, .03, 37.7);
+  card(signT, 2.1, -4.9, 38.2);
+  actors.push((dt, t) => { const m = tSit[Math.floor(t * 3) % 2]; teddySit.material.map = m; teddyHero.material.map = m; });
   const tRun = [texOf(A.teddy(0, false)), texOf(A.teddy(1, false))];
-  const teddy = card(tRun[0], 1.3, 0, 0), teddySh = shadowFor(teddy, 1.2);
+  const teddy = card(tRun[0], 1.9, 0, 0), teddySh = shadowFor(teddy, 1.7);
   const tPath = [[-14, 6], [-6, 11.8], [4, 12.2], [13, 7]];
   const tl = [0]; for (let i = 1; i < tPath.length; i++) tl.push(tl[i - 1] + Math.hypot(tPath[i][0] - tPath[i - 1][0], tPath[i][1] - tPath[i - 1][1]));
   const tst = { s: 0, dir: 1, wait: 0 };
