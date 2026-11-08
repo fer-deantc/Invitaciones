@@ -32,18 +32,18 @@
     const now = performance.now();
     if (busy || now - lastFlight < 12000) return;
     busy = true; lastFlight = now;
-    const W = innerWidth, H = innerHeight, w = Math.min(380, W * .8);
+    const W = innerWidth, H = innerHeight, w = Math.min(240, W * .55);
     box.style.width = w + 'px';
     const y0 = H * (.16 + Math.random() * .2), rise = H * .12;
     box.hidden = false;
     // el final del vuelo se agenda primero: pase lo que pase con el sonido, el trineo se va
-    setTimeout(() => { box.hidden = true; busy = false; if (anim) anim.cancel(); }, 5300);
+    setTimeout(() => { box.hidden = true; busy = false; if (anim) anim.cancel(); }, 3300);
     const anim = box.animate([
       { transform: `translate(${W + 20}px,${y0}px) rotate(-6deg)` },
       { transform: `translate(${W * .5 - w * .5}px,${y0 - rise}px) rotate(-2deg)`, offset: .5 },
       { transform: `translate(${-w - 40}px,${y0 - rise * .3}px) rotate(4deg)` }
-    ], { duration: 5200, easing: 'cubic-bezier(.35,.1,.6,.9)', fill: 'both' });
-    try { if (P.audio && P.audio.playing) { if (P.audio.wind) P.audio.wind(5.2); P.audio.jingle(.7); setTimeout(() => P.audio.jingle(.5), 900); setTimeout(() => P.audio.jingle(.4), 1800); } } catch (e) { /* sin sonido, el vuelo sigue */ }
+    ], { duration: 3200, easing: 'cubic-bezier(.35,.1,.6,.9)', fill: 'both' });
+    try { if (P.audio && P.audio.playing) { if (P.audio.wind) P.audio.wind(3.2); P.audio.jingle(.7); setTimeout(() => P.audio.jingle(.5), 550); setTimeout(() => P.audio.jingle(.4), 1100); } } catch (e) { /* sin sonido, el vuelo sigue */ }
   }
   const io = new IntersectionObserver(es => es.forEach(e => {
     if (e.isIntersecting && document.body.classList.contains('unlocked')) { fly(); io.unobserve(e.target); }

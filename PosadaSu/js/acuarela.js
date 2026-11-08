@@ -1007,6 +1007,27 @@
      SANTA Y SUS RENOS — clásicos, pintados con volumen (luz cálida
      arriba, sombra azulada abajo), en piezas separadas para que se muevan
      ========================================================= */
+  // acuarela mojada: el pigmento se corre más allá del contorno, se queda papel blanco
+  // del lado de la luz, una segunda veladura más oscura en la sombra, coliflores
+  // donde el agua regresó, granulado y tinta suelta, cortada y un poco desfasada
+  const wv = (g, pts, col, o = {}) => {
+    const [x0, y0, x1, y1] = bbox(pts), w = x1 - x0 || 1, h = y1 - y0 || 1, sm = o.poly ? (q, j) => path(g, q, j) : (q, j) => curve(g, q, j);
+    const L = o.l || [.3, .2], lx = x0 + w * L[0], ly = y0 + h * L[1], sx = x0 + w * (1 - L[0]), sy = y0 + h * (1 - L[1]), sh = o.sh == null ? .5 : o.sh;
+    g.save(); g.fillStyle = col;
+    for (let k = 0; k < 5; k++) { g.globalAlpha = .21; sm(pts.map(([x, y]) => [x + (rnd() - .5) * 1.6, y + (rnd() - .5) * 1.6]), 1); g.fill(); }
+    g.globalAlpha = 1; sm(pts, 0); g.clip();
+    const gr = g.createRadialGradient(lx, ly, 0, lx, ly, Math.max(w, h) * .65); gr.addColorStop(0, `rgba(255,250,238,${o.hi == null ? .5 : o.hi})`); gr.addColorStop(1, 'rgba(255,250,238,0)');
+    g.fillStyle = gr; g.fillRect(x0 - 2, y0 - 2, w + 4, h + 4);
+    for (let k = 0; k < 5; k++) dab(g, sx + (rnd() - .5) * w * .5, sy + (rnd() - .5) * h * .5, w * (.25 + rnd() * .25), h * (.25 + rnd() * .25), shade(col, .58), sh * .28, rnd() * 3);
+    dab(g, sx, sy, w * .45, h * .45, 'rgb(40,52,112)', sh * .14);
+    for (let k = 0; k < (o.blooms == null ? 2 : o.blooms); k++) { const bx = x0 + w * (.2 + rnd() * .6), by = y0 + h * (.2 + rnd() * .6), br = Math.min(w, h) * (.12 + rnd() * .14); dab(g, bx, by, br, br, mix(col, '#ffffff', .45), .28); g.save(); g.strokeStyle = shade(col, .6); g.globalAlpha = .22; g.lineWidth = .35; g.beginPath(); for (let a = 0; a <= 6.3; a += .5) { const rr = br * (1 + (rnd() - .5) * .35); a ? g.lineTo(bx + Math.cos(a) * rr, by + Math.sin(a) * rr) : g.moveTo(bx + rr, by); } g.closePath(); g.stroke(); g.restore(); }
+    const n = Math.min(500, w * h / 6); for (let i = 0; i < n; i++) dab(g, x0 + rnd() * w, y0 + rnd() * h, .2 + rnd() * .5, .2 + rnd() * .5, shade(col, .5), .14);
+    g.restore();
+    g.save(); g.strokeStyle = shade(col, .66); g.lineWidth = .6;
+    for (let k = 0; k < 2; k++) { g.globalAlpha = .28; sm(pts, 1); g.stroke(); }
+    g.restore();
+    if (o.ink) { g.save(); g.translate(.5, -.4); g.strokeStyle = K.ink; g.globalAlpha = o.ink * .6; g.lineWidth = (o.iw || .6) * .8; g.setLineDash([5 + rnd() * 4, 1.6 + rnd() * 2]); sm(pts, 1.1); g.stroke(); g.restore(); }
+  };
   // lienzo con más resolución, para piezas chicas con detalle
   const cvHi = (w, h) => { const c = document.createElement('canvas'); c.width = Math.ceil(w * 4); c.height = Math.ceil(h * 4); const g = c.getContext('2d'); g.scale(4, 4); g.lineCap = 'round'; g.lineJoin = 'round'; c.lw = w; c.lh = h; return [c, g]; };
   // un reno en pleno galope volador (mira a la izquierda), dos cuadros: estirado y recogido
@@ -1018,18 +1039,18 @@
     // patas del fondo, más oscuras
     g.save(); g.globalAlpha = .8; far.forEach(p => leg(p, 2.8)); g.restore();
     // cuerpo
-    vol(g, [[24, 34], [30, 28], [44, 27], [58, 28], [67, 31], [69, 37], [65, 44], [52, 46], [38, 46], [27, 44]], fur, { l: [.35, 0], sh: .6, hi: .45, ink: .5 });
+    wv(g, [[24, 34], [30, 28], [44, 27], [58, 28], [67, 31], [69, 37], [65, 44], [52, 46], [38, 46], [27, 44]], fur, { l: [.35, 0], sh: .6, hi: .45, ink: .5 });
     dab(g, 46, 44, 13, 2.4, '#e9dcc6', .55);
     dab(g, 68, 34, 3, 4, '#f3ece0', .95); brush(g, 69, 32, 73, 29, 1.6, '#f3ece0', .9);
     for (let i = 0; i < 16; i++) { const x = 30 + rnd() * 34, y = 30 + rnd() * 12; line(g, x, y, x + 2.4, y + .6, .35, .35, furD); }
     // pecho y cuello con la melena clara
-    vol(g, [[22, 36], [16, 26], [13, 18], [19, 14], [25, 20], [31, 30]], '#7d4f2e', { l: [.4, 0], sh: .5, gran: false, ink: .45 });
+    wv(g, [[22, 36], [16, 26], [13, 18], [19, 14], [25, 20], [31, 30]], '#7d4f2e', { l: [.4, 0], sh: .5, gran: false, ink: .45 });
     for (let k = 0; k < 7; k++) brush(g, 16 + k * .8, 22 + k * 1.6, 13 + k * .9, 27 + k * 1.8, 1.4, '#efe4d0', .85);
     // cabeza
-    vol(g, [[16, 17], [10, 14], [4, 15.5], [2, 19], [6, 21], [12, 21], [18, 19]], fur, { l: [.4, .1], sh: .5, gran: false, ink: .55 });
+    wv(g, [[16, 17], [10, 14], [4, 15.5], [2, 19], [6, 21], [12, 21], [18, 19]], fur, { l: [.4, .1], sh: .5, gran: false, ink: .55 });
     dab(g, 4, 19, 2.6, 2, '#4a2e1c', 1); dab(g, 2.6, 18.4, 1.1, .9, '#1a100a', 1);
     dab(g, 10.5, 16.4, 1, 1, '#15100c', 1); dab(g, 10.2, 16, .35, .35, '#ffffff', 1);
-    vol(g, [[16, 14], [20, 10.5], [21, 13], [18, 16]], fur, { gran: false, edge: false, ink: .4 });
+    wv(g, [[16, 14], [20, 10.5], [21, 13], [18, 16]], fur, { gran: false, edge: false, ink: .4 });
     // astas ramificadas
     const ant = '#6b5236';
     for (const [ox, k] of [[0, 1], [3, .85]]) { g.save(); g.globalAlpha = k; ink(g, [[14 + ox, 13], [15 + ox, 7], [20 + ox, 3], [26 + ox, 1.5]], 1.3, false, .95, ant); ink(g, [[15 + ox, 8], [12 + ox, 3]], .9, false, .95, ant); ink(g, [[18 + ox, 4.6], [18 + ox, .5]], .8, false, .95, ant); ink(g, [[22 + ox, 2.6], [23 + ox, -.5]], .7, false, .95, ant); g.restore(); }
@@ -1047,16 +1068,16 @@
   A.sleighBody = () => {
     A.seed(413); const W = 150, H = 100, [c, g] = cvHi(W, H);
     // costal de yute con juguetes asomándose
-    vol(g, [[94, 46], [92, 30], [98, 18], [110, 14], [122, 20], [126, 34], [124, 46]], '#b48a5a', { l: [.3, 0], sh: .55, ink: .55 });
+    wv(g, [[94, 46], [92, 30], [98, 18], [110, 14], [122, 20], [126, 34], [124, 46]], '#b48a5a', { l: [.3, 0], sh: .55, ink: .55 });
     for (let k = 0; k < 12; k++) line(g, 96 + rnd() * 26, 20 + rnd() * 24, 99 + rnd() * 26, 21 + rnd() * 24, .3, .35, '#6a4a2a');
-    vol(g, [[100, 20], [112, 18], [112, 8], [100, 10]], '#9e1f2b', { poly: true, l: [.2, 0], sh: .5, gran: false, ink: .6 }); brush(g, 106, 19, 106, 9, 1.6, '#d9a93e', 1); brush(g, 100, 14, 112, 13, 1.4, '#d9a93e', 1);
-    vol(g, [[113, 20], [122, 21], [121, 12], [113, 12]], K.sage, { poly: true, l: [.2, 0], sh: .45, gran: false, ink: .6 }); brush(g, 117.5, 20, 117.5, 12, 1.2, K.burg, 1);
+    wv(g, [[100, 20], [112, 18], [112, 8], [100, 10]], '#9e1f2b', { poly: true, l: [.2, 0], sh: .5, gran: false, ink: .6 }); brush(g, 106, 19, 106, 9, 1.6, '#d9a93e', 1); brush(g, 100, 14, 112, 13, 1.4, '#d9a93e', 1);
+    wv(g, [[113, 20], [122, 21], [121, 12], [113, 12]], K.sage, { poly: true, l: [.2, 0], sh: .45, gran: false, ink: .6 }); brush(g, 117.5, 20, 117.5, 12, 1.2, K.burg, 1);
     dab(g, 109, 8, 4, 3.6, '#a8774a', 1); dab(g, 106, 5, 1.6, 1.6, '#a8774a', 1); dab(g, 112, 5, 1.6, 1.6, '#a8774a', 1); dab(g, 108, 8, .5, .5, '#15100c', 1); dab(g, 110.4, 8, .5, .5, '#15100c', 1); dab(g, 109.2, 9.6, 1.2, .8, '#d9b896', 1);
     // el interior en sombra (da la profundidad)
     loose(g, [[28, 46], [104, 46], [104, 38], [28, 38]], '#3d0c14', .9);
     // la caja del trineo
     const body = [[24, 74], [14, 66], [10, 52], [12, 40], [18, 34], [26, 37], [30, 44], [104, 44], [110, 30], [116, 18], [124, 14], [131, 17], [129, 26], [122, 32], [120, 50], [114, 64], [100, 74]];
-    vol(g, body, '#9c1621', { l: [.3, .05], sh: .6, hi: .3, light: '255,170,140', r: .9, ink: .75, iw: .8 });
+    wv(g, body, '#9c1621', { l: [.3, .05], sh: .6, hi: .3, light: '255,170,140', r: .9, ink: .75, iw: .8 });
     // brillo de la laca
     brush(g, 34, 50, 102, 50, 2.2, 'rgba(255,170,150,.35)', 1); brush(g, 118, 22, 122, 44, 1.6, 'rgba(255,190,180,.4)', 1);
     // filete dorado y volutas en el costado
@@ -1067,7 +1088,7 @@
     ink(g, [[24, 72], [13, 62], [10, 48], [13, 38], [19, 34], [24, 36], [23, 41], [19, 41]], 2.2, false, .95, '#d9a93e'); ink(g, [[23, 70], [13, 60], [11, 48]], .7, false, .9, '#fff0b8');
     // manta escocesa verde colgando por el costado
     const bl = [[66, 43], [100, 43], [98, 64], [92, 61], [86, 66], [80, 62], [72, 65], [68, 58]];
-    vol(g, bl, K.racing, { poly: true, l: [.2, 0], sh: .5, gran: false, ink: .6 });
+    wv(g, bl, K.racing, { poly: true, l: [.2, 0], sh: .5, gran: false, ink: .6 });
     for (let k = 0; k < 5; k++) { line(g, 69 + k * 7, 44, 68 + k * 7, 63, .9, .7, '#c9a24a'); line(g, 72 + k * 7, 44, 71 + k * 7, 63, .6, .5, K.burg); }
     for (let k = 0; k < 3; k++) line(g, 67, 48 + k * 6, 99, 48 + k * 6, .8, .6, K.burg);
     // patines dorados con voluta al frente y sus soportes
@@ -1085,34 +1106,34 @@
     const red = '#b01e2a', fur = '#f7f3ec', furS = '#a9b6d6';
     g.save(); g.beginPath(); g.rect(-5, -5, W + 10, 55.5 + 5); g.clip();
     // brazo de las riendas (adelante, a la izquierda)
-    vol(g, [[18, 34], [10, 38], [6, 42], [8, 45], [14, 43], [22, 40]], red, { l: [.3, 0], sh: .55, gran: false, ink: .55 });
+    wv(g, [[18, 34], [10, 38], [6, 42], [8, 45], [14, 43], [22, 40]], red, { l: [.3, 0], sh: .55, gran: false, ink: .55 });
     brush(g, 7, 41, 9, 45, 3, fur, 1); dab(g, 5, 43.6, 2.6, 2.4, '#1f1a1a', 1);
     ink(g, [[5, 44], [0, 47]], .8, false, .8, '#3b2a20');
     // abrigo, con volumen
-    vol(g, [[12, 58], [12, 44], [16, 34], [24, 30], [36, 30], [44, 35], [47, 46], [47, 58]], red, { l: [.3, .1], sh: .62, hi: .45, r: .9, ink: .6 });
+    wv(g, [[12, 58], [12, 44], [16, 34], [24, 30], [36, 30], [44, 35], [47, 46], [47, 58]], red, { l: [.3, .1], sh: .62, hi: .45, r: .9, ink: .6 });
     // ribete de piel con sombra azulada
     brush(g, 27, 31, 26.5, 56, 4.4, fur, 1); brush(g, 28.6, 33, 28.2, 56, 1.4, furS, .6);
     brush(g, 12, 47.6, 47, 47.6, 3.8, '#201a1a', 1); brush(g, 14, 46.4, 40, 46.4, .7, '#5a5050', .7);
-    vol(g, [[24, 45], [30, 45], [30, 50.6], [24, 50.6]], '#d9a93e', { poly: true, gran: false, ink: .5, sh: .4 }); dab(g, 27, 47.8, 1.4, 1, '#3a2a10', 1);
+    wv(g, [[24, 45], [30, 45], [30, 50.6], [24, 50.6]], '#d9a93e', { poly: true, gran: false, ink: .5, sh: .4 }); dab(g, 27, 47.8, 1.4, 1, '#3a2a10', 1);
     // brazo que saluda (cuadro 0 arriba, cuadro 1 de lado)
     const hand = frame ? [50, 20] : [44, 13];
-    vol(g, [[37, 32], [42, 34], [hand[0] + 2.6, hand[1] + 4], [hand[0] - 2.6, hand[1] + 2]], red, { l: [.3, 0], sh: .5, gran: false, ink: .55, poly: true });
+    wv(g, [[37, 32], [42, 34], [hand[0] + 2.6, hand[1] + 4], [hand[0] - 2.6, hand[1] + 2]], red, { l: [.3, 0], sh: .5, gran: false, ink: .55, poly: true });
     brush(g, hand[0] - 2.6, hand[1] + 3, hand[0] + 2.6, hand[1] + 4.6, 3, fur, 1);
-    vol(g, [[hand[0] - 2.4, hand[1] + 2], [hand[0] - 2.8, hand[1] - 2], [hand[0], hand[1] - 3.6], [hand[0] + 2.6, hand[1] - 1.4], [hand[0] + 2.4, hand[1] + 2.6]], '#2a2222', { gran: false, edge: false, sh: .3 });
+    wv(g, [[hand[0] - 2.4, hand[1] + 2], [hand[0] - 2.8, hand[1] - 2], [hand[0], hand[1] - 3.6], [hand[0] + 2.6, hand[1] - 1.4], [hand[0] + 2.4, hand[1] + 2.6]], '#2a2222', { gran: false, edge: false, sh: .3 });
     // cara: mejillas chapeadas y nariz redonda
-    vol(g, [[19, 21], [21, 15], [27, 13], [32, 16], [33, 22], [29, 27], [22, 27]], '#f1c9a8', { l: [.3, .1], sh: .35, gran: false, ink: .45 });
+    wv(g, [[19, 21], [21, 15], [27, 13], [32, 16], [33, 22], [29, 27], [22, 27]], '#f1c9a8', { l: [.3, .1], sh: .35, gran: false, ink: .45 });
     dab(g, 21.5, 22, 2.4, 1.8, '#e07a6a', .6); dab(g, 30, 22, 2, 1.6, '#e07a6a', .45);
     dab(g, 19.6, 20.4, 2, 1.7, '#e08a78', 1); dab(g, 19, 19.8, .6, .5, '#ffffff', .8);
     ink(g, [[22, 18.2], [23.4, 17.4], [24.6, 18.2]], .55, false, .9);
     // barba blanca abundante, ondeando hacia atrás con el viento
     const bw = frame ? 1.5 : 0;
-    vol(g, [[19, 23], [17, 30], [20, 38], [26, 43], [33 + bw, 41], [39 + bw, 35], [41 + bw, 28], [35, 25], [30, 27]], fur, { l: [.3, .1], sh: .42, hi: .2, light: '255,250,240', gran: false, ink: .4 });
+    wv(g, [[19, 23], [17, 30], [20, 38], [26, 43], [33 + bw, 41], [39 + bw, 35], [41 + bw, 28], [35, 25], [30, 27]], fur, { l: [.3, .1], sh: .42, hi: .2, light: '255,250,240', gran: false, ink: .4 });
     for (let k = 0; k < 9; k++) ink(g, [[21 + k * 2, 26 + rnd() * 3], [22 + k * 2.2, 33 + rnd() * 5]], .35, false, .4, '#8a96b8');
     dab(g, 21, 24, 3.4, 1.6, fur, 1, -.2); dab(g, 26, 24.2, 3.4, 1.6, fur, 1, .2); ink(g, [[18, 24.6], [21, 23.4], [24, 24.6], [27, 23.4], [30, 24.8]], .4, false, .5, '#8a96b8');
     brush(g, 21, 16.4, 25, 16, 1.6, fur, 1);
     // gorro rojo con ribete de piel y pompón que vuela hacia atrás
     const pom = frame ? [53, 15] : [52, 18];
-    vol(g, [[18, 16], [20, 9], [28, 6], [38, 8], [46, 11], [pom[0] - 1, pom[1] - 1], [44, 15], [34, 14]], red, { l: [.25, 0], sh: .55, gran: false, ink: .55 });
+    wv(g, [[18, 16], [20, 9], [28, 6], [38, 8], [46, 11], [pom[0] - 1, pom[1] - 1], [44, 15], [34, 14]], red, { l: [.25, 0], sh: .55, gran: false, ink: .55 });
     brush(g, 17.6, 15.6, 34, 14.6, 4.6, fur, 1); brush(g, 19, 17, 33, 16.4, 1.4, furS, .55);
     dab(g, pom[0], pom[1], 3.6, 3.4, fur, 1); dab(g, pom[0] + 1, pom[1] + 1, 2, 1.8, furS, .5);
     g.restore();
