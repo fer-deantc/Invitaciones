@@ -236,7 +236,7 @@
         aW.x = S.a.x; aW.y = S.a.y; aW.z = S.a.z; mag = S.raw || 0;
       }
       S.mag += (mag - S.mag) * (1 - Math.exp(-dt / .12));
-      const rate = clamp((S.mag - 6) / 12, 0, 1.6) / 2.4;
+      const rate = clamp((S.mag - 3) / 8, 0, 1.6) / 2;
       if (rate > 0) {
         B.p0 = Math.min(1, B.p0 + rate * dt);
         if (B.p0 > .05 && !shakes) { shakes = 1; shakeText.textContent = 'Sigue. La nieve ya despertó.'; }
@@ -245,7 +245,7 @@
       const hi = mag > 13;
       if (hi && !high && now - jingleAt > 110) { P.audio.jingle(clamp(mag / 22, .4, 1.4)); jingleAt = now; }
       high = hi;
-      if (!skip.dataset.shown && now - tArm > 12000) { skip.hidden = false; skip.dataset.shown = '1'; }
+      if (!skip.dataset.shown && now - tArm > 7000) { skip.hidden = false; skip.dataset.shown = '1'; }
     }
     if (!drag) {
       const k = 160, c = 11, F = 2.4;
