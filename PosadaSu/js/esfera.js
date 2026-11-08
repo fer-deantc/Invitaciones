@@ -302,6 +302,8 @@
     P.audio.clink();
     setTimeout(() => P.audio.whoosh(), 120);
     if (navigator.vibrate) try { navigator.vibrate([25, 40, 70]); } catch (err) { /* nada */ }
+    // la canción arranca junto con la lluvia de nieve, no al final
+    try { P.audio.start(); } catch (err) { /* sin sonido, la apertura sigue */ }
     P.snowfall.burst(() => { B.finished = true; P.reveal(); });
   }
 
