@@ -96,9 +96,14 @@
       const g = P.el('g', { class: 'ray', style: `animation-delay:${-i * .4}s` }, rays);
       P.el('line', { x1: 250 + Math.cos(a) * r1, y1: 250 + Math.sin(a) * r1, x2: 250 + Math.cos(a) * r2, y2: 250 + Math.sin(a) * r2, stroke: i % 2 ? '#f6c453' : '#ffe39a', 'stroke-width': i % 2 ? 3 : 2, 'stroke-linecap': 'round', opacity: .9 }, g);
     }
-    // la mesa de nogal
+    // la mesa de madera
     const table = $('#table'); table.innerHTML = '';
     img(table, A.tableTop(), 0, 0, 1000, 400);
+    // Teddy, el yorkie café de la casa, sentado en la mesa junto a la esfera (mueve la cola)
+    let td = $('#teddyGate');
+    if (!td) { td = document.createElement('div'); td.id = 'teddyGate'; td.setAttribute('aria-hidden', 'true'); gate.appendChild(td); }
+    td.innerHTML = '';
+    [A.teddy(0, true, 3), A.teddy(1, true, 3)].forEach((c, k) => { c.className = 'fr f' + k; td.appendChild(c); });
   }
 
   /* ---------- Nieve dentro de la esfera (2D) ---------- */

@@ -161,16 +161,33 @@ footer{position:relative;z-index:3;padding:10px 16px calc(130px + env(safe-area-
 
 /* ---------- El trineo ---------- */
 #sleigh{position:fixed;left:0;top:0;z-index:8;width:380px;pointer-events:none;will-change:transform}
-#sleigh canvas{display:block;width:100%;height:auto}
-#sleigh .f1{position:absolute;left:0;top:0;animation:gallopB .3s steps(1) infinite}
-#sleigh .f0{animation:gallopA .3s steps(1) infinite}
-@keyframes gallopA{0%{opacity:1}50%{opacity:0}}
-@keyframes gallopB{0%{opacity:0}50%{opacity:1}}
+#sleigh{aspect-ratio:440/150}
+#sleigh .sp,#sleigh .reins{position:absolute}
+#sleigh .reins{inset:0;width:100%;height:100%}
+#sleigh .fr{display:block;width:100%;height:auto}
+#sleigh .f1{position:absolute;left:0;top:0}
+#sleigh .deer{width:18%}
+#sleigh .d0{left:0;top:22%;animation:deerBob .42s ease-in-out infinite alternate}
+#sleigh .d1{left:17%;top:14%;animation:deerBob .42s ease-in-out -.21s infinite alternate}
+#sleigh .d2{left:34%;top:22%;animation:deerBob .42s ease-in-out -.1s infinite alternate}
+#sleigh .d3{left:51%;top:14%;animation:deerBob .42s ease-in-out -.31s infinite alternate}
+#sleigh .deer .f0{animation:frA .28s steps(1) infinite}
+#sleigh .deer .f1{animation:frB .28s steps(1) infinite}
+#sleigh .d1 .fr,#sleigh .d3 .fr{animation-delay:-.14s}
+#sleigh .sled{left:64%;top:4%;width:34%;animation:sledBob .8s ease-in-out infinite alternate}
+#sleigh .santa{position:absolute;left:24%;top:-8%;width:38%}
+#sleigh .santa .f0{animation:frA .9s steps(1) infinite}
+#sleigh .santa .f1{animation:frB .9s steps(1) infinite}
+#sleigh .trail{left:92%;top:46%;width:18%}
+@keyframes frA{0%{opacity:1}50%{opacity:0}}
+@keyframes frB{0%{opacity:0}50%{opacity:1}}
+@keyframes deerBob{from{transform:translateY(-6%)}to{transform:translateY(6%)}}
+@keyframes sledBob{from{transform:translateY(-3%) rotate(-1.5deg)}to{transform:translateY(3%) rotate(1.5deg)}}
 
 /* ---------- Entrada: la esfera sobre la mesa ---------- */
-#gate{--p:0;position:fixed;inset:0;z-index:10;overflow:hidden;background:#16244d;color:var(--ink)}
-#room{position:absolute;inset:-3%;width:106%;height:106%;filter:blur(3.4px);transform:scale(calc(1 + var(--p) * .2));transform-origin:50% 40%}
-#gate::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 42% at 50% 40%,rgba(255,206,130,.28),transparent 70%),radial-gradient(120% 90% at 50% 45%,transparent 55%,rgba(8,20,58,.55) 100%);pointer-events:none;z-index:1}
+#gate{--p:0;position:fixed;inset:0;z-index:10;overflow:hidden;background:#f6f1e5;color:var(--ink)}
+#room{position:absolute;inset:-3%;width:106%;height:106%;filter:blur(1.2px);transform:scale(calc(1 + var(--p) * .2));transform-origin:50% 40%}
+#gate::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 42% at 50% 40%,rgba(255,226,170,.3),transparent 70%),radial-gradient(130% 95% at 50% 45%,transparent 60%,rgba(120,100,70,.25) 100%);pointer-events:none;z-index:1}
 #table{position:absolute;left:0;right:0;top:var(--table,70%);bottom:0;width:100%;height:calc(100% - var(--table,70%));z-index:1}
 .gift-tag{position:absolute;left:50%;top:calc(clamp(16px,4vh,40px) + env(safe-area-inset-top,0px));z-index:4;transform:translateX(-50%) rotate(-1deg);width:max-content;max-width:calc(100% - 32px);margin:0;padding:12px 22px;text-align:center;
   font-family:var(--fell);font-style:italic;font-size:clamp(1.05rem,4.4vw,1.35rem);line-height:1.25;color:var(--ink);background:var(--grain),var(--cream);opacity:calc(1 - var(--p) * 4)}
@@ -206,6 +223,11 @@ footer{position:relative;z-index:3;padding:10px 16px calc(130px + env(safe-area-
 @keyframes drag{0%,100%{transform:translateX(-10px)}50%{transform:translateX(10px)}}
 #shakeText{margin:0;font-family:var(--fell);font-style:italic;font-size:clamp(1.5rem,6.6vw,2.1rem);line-height:1.1;color:var(--ink)}
 .skip{margin-top:2px;padding:6px 10px;font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--muted);background:none;border:0;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+#teddyGate{position:absolute;z-index:3;width:min(19vw,98px);left:calc(50% + min(70vw,40svh,380px) * .34);top:calc(var(--table,70%) - min(19vw,98px) * .8);opacity:calc(1 - var(--p) * 3);pointer-events:none}
+#teddyGate .fr{display:block;width:100%;height:auto}
+#teddyGate .f1{position:absolute;left:0;top:0;animation:frB 1.1s steps(1) infinite}
+#teddyGate .f0{animation:frA 1.1s steps(1) infinite}
+html.og #teddyGate{left:430px;top:calc(var(--table,70%) - 86px);width:100px}
 #flash{position:fixed;inset:0;z-index:15;pointer-events:none;opacity:0;background:#fffdf6}
 #drift{position:fixed;left:0;top:0;width:100%;height:100lvh;z-index:13;pointer-events:none;transform:translateY(-130%)}
 #drift .sheet{position:absolute;inset:0;background:var(--grain),linear-gradient(180deg,#fbf8f1,#f4ecdc 70%,#efe4cc)}
@@ -397,13 +419,13 @@ html.og .og-copy{display:block}
 <script src="config.js?v=7"></script>
 <script src="js/sonido.js?v=8"></script>
 <script src="js/pluma.js?v=7"></script>
-<script src="js/acuarela.js?v=14"></script>
+<script src="js/acuarela.js?v=15"></script>
 <script src="js/nieve.js?v=8"></script>
 <script src="js/invitacion.js?v=7"></script>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js"}}</script>
-<script type="module" src="js/villa.js?v=18"></script>
-<script src="js/esfera.js?v=8"></script>
-<script src="js/trineo.js?v=8"></script>
+<script type="module" src="js/villa.js?v=19"></script>
+<script src="js/esfera.js?v=9"></script>
+<script src="js/trineo.js?v=9"></script>
 <script>
   // marcos a mano, guirnaldas y el letrero, cuando ya cargaron las tipografías
   POSADA.decorate();
