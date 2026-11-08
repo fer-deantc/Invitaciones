@@ -31,6 +31,8 @@
     anfitriones: C.anfitriones,
     fechaLarga: `${cap1(DIAS[dow])} ${D} de ${MESES[M - 1]} de ${Y}`,
     fechaPoster: `${cap1(DIAS[dow])} ${D} de ${MESES[M - 1]}`,
+    fechaNum: `${pad(D)} / ${pad(M)} / ${Y}`,
+    diaHora: `${cap1(DIAS[dow])} · ${hora12}`,
     hora: hora12,
     fechaPie: `${D} de ${MESES[M - 1]} de ${ROMANOS(Y)}`,
     anio: ROMANOS(Y),

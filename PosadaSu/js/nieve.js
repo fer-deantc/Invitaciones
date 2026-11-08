@@ -15,6 +15,8 @@
     g.fillStyle = gr; g.fillRect(0, 0, 64, 64); return c;
   };
   const FLAKE = sprite('255,255,255', .4), SOFT = sprite('248,250,255', .12);
+  // copo de pluma para la nieve que cae sobre el papel: blanco con contorno café
+  const INKFLAKE = (() => { const c = document.createElement('canvas'); c.width = c.height = 32; const g = c.getContext('2d'); g.beginPath(); g.arc(16, 16, 11, 0, 6.283); g.fillStyle = '#fbf8f1'; g.fill(); g.lineWidth = 3; g.strokeStyle = 'rgba(43,31,22,.55)'; g.stroke(); return c; })();
 
   /* ---------- Ventisca ---------- */
   function blizzard() {
@@ -98,51 +100,49 @@
         p.x += (gx * sp - gy * sw * .6) * dt; p.y += (gy * sp + gx * sw * .6) * dt;
         if (p.y > H + 10) p.y = -10; else if (p.y < -10) p.y = H + 10;
         if (p.x > W + 10) p.x = -10; else if (p.x < -10) p.x = W + 10;
-        x.globalAlpha = .4 + p.z * .5;
-        x.drawImage(FLAKE, p.x - p.s, p.y - p.s, p.s * 2, p.s * 2);
+        x.globalAlpha = .55 + p.z * .45;
+        x.drawImage(INKFLAKE, p.x - p.s, p.y - p.s, p.s * 2, p.s * 2);
       }
       requestAnimationFrame(loop);
     };
     requestAnimationFrame(loop);
   };
 
-  /* ---------- Fondo de la sala (desenfocado) ---------- */
+  /* ---------- Fondo de la sala navideña (dibujada y desenfocada) ---------- */
   P.paintRoom = function () {
-    const c = $('#room'); if (!c) return;
-    const W = innerWidth, H = innerHeight, dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-    c.width = W * dpr; c.height = H * dpr;
-    const g = c.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const rnd = (s => () => { s = (s * 16807) % 2147483647; return s / 2147483647; })(97);
-    // muro verde de biblioteca con lambrín
-    let gr = g.createLinearGradient(0, 0, 0, H);
-    gr.addColorStop(0, '#16201a'); gr.addColorStop(.45, '#1f2b22'); gr.addColorStop(.62, '#1a231c'); gr.addColorStop(1, '#0f1510');
-    g.fillStyle = gr; g.fillRect(0, 0, W, H);
-    g.strokeStyle = 'rgba(0,0,0,.35)'; g.lineWidth = 6;
-    for (let x = W * .04; x < W; x += Math.max(160, W * .22)) g.strokeRect(x, H * .5, Math.max(130, W * .18), H * .4);
-    g.strokeStyle = 'rgba(214,180,110,.08)'; g.lineWidth = 2;
-    g.beginPath(); g.moveTo(0, H * .47); g.lineTo(W, H * .47); g.stroke();
-    // ventana fría a la izquierda, con nieve afuera
-    const wx = W * -.06, wy = H * .06, ww = Math.max(150, W * .3), wh = H * .5;
-    gr = g.createLinearGradient(wx, wy, wx, wy + wh); gr.addColorStop(0, '#30486e'); gr.addColorStop(1, '#1b2a44');
-    g.fillStyle = gr; g.fillRect(wx, wy, ww, wh);
-    for (let i = 0; i < 90; i++) { g.fillStyle = `rgba(230,238,250,${.2 + rnd() * .5})`; g.beginPath(); g.arc(wx + rnd() * ww, wy + rnd() * wh, .8 + rnd() * 2, 0, 7); g.fill(); }
-    g.strokeStyle = '#0c120e'; g.lineWidth = 10; g.strokeRect(wx, wy, ww, wh);
-    g.lineWidth = 6; g.beginPath(); g.moveTo(wx + ww / 2, wy); g.lineTo(wx + ww / 2, wy + wh); g.moveTo(wx, wy + wh / 2); g.lineTo(wx + ww, wy + wh / 2); g.stroke();
-    // cortina de terciopelo
-    gr = g.createLinearGradient(wx + ww - 20, 0, wx + ww + 70, 0); gr.addColorStop(0, '#3d0f12'); gr.addColorStop(.5, '#6a1a1e'); gr.addColorStop(1, '#2a090b');
-    g.fillStyle = gr; g.fillRect(wx + ww - 24, 0, 90, H * .62);
-    // lámpara cálida a la derecha
-    gr = g.createRadialGradient(W * .86, H * .2, 0, W * .86, H * .2, Math.max(W, H) * .5);
-    gr.addColorStop(0, 'rgba(255,196,120,.55)'); gr.addColorStop(.25, 'rgba(255,170,90,.2)'); gr.addColorStop(1, 'rgba(255,160,80,0)');
-    g.fillStyle = gr; g.fillRect(0, 0, W, H);
-    // chimenea: brillo naranja abajo a la izquierda
-    gr = g.createRadialGradient(W * .08, H * .78, 0, W * .08, H * .78, Math.max(W, H) * .45);
-    gr.addColorStop(0, 'rgba(255,120,40,.35)'); gr.addColorStop(1, 'rgba(255,120,40,0)');
-    g.fillStyle = gr; g.fillRect(0, 0, W, H);
-    // guirnalda de luces y el árbol, fuera de foco (bokeh)
-    const bokeh = (x, y, r, col, a) => { const b = g.createRadialGradient(x, y, 0, x, y, r); b.addColorStop(0, `rgba(${col},${a})`); b.addColorStop(.7, `rgba(${col},${a * .8})`); b.addColorStop(1, `rgba(${col},0)`); g.fillStyle = b; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); };
-    const warm = ['255,206,130', '255,186,100', '255,228,170', '255,150,80'];
-    for (let i = 0; i < 26; i++) { const t = i / 25, x = W * (.2 + .8 * t), y = H * (.1 + .1 * Math.sin(t * Math.PI) + .02 * rnd()); bokeh(x, y, 8 + rnd() * 18, warm[i % 4], .35 + rnd() * .3); }
-    for (let i = 0; i < 40; i++) { const x = W * (.74 + rnd() * .3), y = H * (.08 + rnd() * .42); bokeh(x, y, 6 + rnd() * 22, rnd() < .2 ? '220,60,50' : rnd() < .2 ? '120,190,120' : warm[i % 4], .25 + rnd() * .35); }
+    const svg = $('#room'); if (!svg || !P.pen) return;
+    svg.innerHTML = '';
+    const C = P.C, pen = P.pen(svg), el = P.el;
+    // muro con rayas suaves y lambrín verde
+    pen.rect(-10, -10, 420, 830, { fill: C.sand, fillStyle: 'solid', stroke: 'none' });
+    for (let x = 0; x < 400; x += 22) pen.line(x, 0, x, 470, { stroke: C.beige, strokeWidth: 5, roughness: .4 });
+    pen.rect(-10, 470, 420, 180, { fill: C.forest, fillStyle: 'solid' });
+    for (let x = 10; x < 400; x += 96) pen.rect(x, 490, 76, 130, { strokeWidth: .9, stroke: C.forestD });
+    pen.rect(-10, 640, 420, 190, { fill: C.brown, fillStyle: 'solid' });
+    // guirnalda de pino con foquitos arriba
+    pen.curve([[-10, 40], [100, 86], [200, 50], [300, 88], [410, 44]], { stroke: C.forest, strokeWidth: 9, roughness: .8 });
+    const bulbs = [C.wine, C.goldL, C.cream, C.goldL];
+    for (let i = 0; i < 18; i++) { const t = i / 17, x = -10 + 420 * t, y = 44 + Math.abs(Math.sin(t * Math.PI * 2)) * 38; pen.circle(x, y + 6, 10, { fill: bulbs[i % 4], fillStyle: 'solid', strokeWidth: .7 }); el('circle', { cx: x, cy: y + 6, r: 16, fill: C.glow, opacity: .35 }, svg); }
+    // ventana con nieve afuera y cortinas vino
+    pen.rect(24, 140, 120, 200, { fill: C.night, fillStyle: 'solid', strokeWidth: 2 });
+    for (let i = 0; i < 40; i++) pen.circle(30 + Math.random() * 108, 146 + Math.random() * 188, 3, { fill: C.snow, fillStyle: 'solid', stroke: 'none' });
+    pen.line(84, 140, 84, 340, { strokeWidth: 3 }); pen.line(24, 240, 144, 240, { strokeWidth: 3 });
+    pen.poly([[6, 120], [40, 120], [30, 360], [0, 360]], { fill: C.wine, fillStyle: 'solid' });
+    pen.poly([[128, 120], [162, 120], [168, 360], [138, 360]], { fill: C.wine, fillStyle: 'solid' });
+    // chimenea con fuego y calcetas
+    pen.rect(196, 340, 180, 150, { fill: C.wineD, fillStyle: 'solid' });
+    pen.rect(186, 326, 200, 18, { fill: C.brown, fillStyle: 'solid' });
+    pen.rect(236, 380, 100, 110, { fill: C.ink, fillStyle: 'solid' });
+    el('ellipse', { cx: 286, cy: 450, rx: 70, ry: 50, fill: C.fire, opacity: .55 }, svg);
+    pen.path('M256,486 q4,-40 22,-56 q-2,22 10,30 q6,-28 22,-40 q-4,30 6,66 z', { fill: C.fire, fillStyle: 'solid', strokeWidth: 1 });
+    pen.path('M272,486 q6,-24 16,-30 q2,14 8,18 q4,-12 10,-16 q0,18 2,28 z', { fill: C.goldL, fillStyle: 'solid', strokeWidth: .8 });
+    [[214, C.wine], [262, C.forest], [312, C.wine], [352, C.forest]].forEach(([x, col]) => { pen.path(`M${x},344 v26 q0,8 -8,10 l-8,2 q-6,-8 2,-12 l4,-2 v-24 z`, { fill: col, fillStyle: 'solid', strokeWidth: .9 }); pen.rect(x - 9, 340, 11, 7, { fill: C.cream, fillStyle: 'solid', strokeWidth: .7 }); });
+    // árbol de Navidad grande y encendido
+    P.tree(pen, svg, 330, 660, 300, { orn: 'many', star: true, shadow: false });
+    for (let i = 0; i < 26; i++) { const t = Math.random(), x = 330 + (Math.random() - .5) * 220 * (1 - t * .8), y = 640 - t * 250; el('circle', { cx: x, cy: y, r: 9, fill: C.glow, opacity: .45 }, svg); }
+    // regalos bajo el árbol y un sillón
+    P.giftPile(pen, svg, 300, 690);
+    pen.path('M20,700 q0,-70 50,-70 h60 q40,0 40,70 v40 h-150 z', { fill: C.wine, fillStyle: 'solid', strokeWidth: 1.4 });
+    pen.hatch([[110, 640], [170, 650], [170, 740], [110, 740]], { op: .4 });
   };
 })();
