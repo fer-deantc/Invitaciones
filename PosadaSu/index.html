@@ -97,6 +97,20 @@ main{position:relative;z-index:1}
 .unlocked .cue.gone{opacity:0;pointer-events:none;transition-delay:0s}
 @keyframes nudge{0%,100%{transform:translateY(-2px)}50%{transform:translateY(4px)}}
 
+/* ---------- Escena de la villa (lienzo fijo detrás de las tarjetas) ---------- */
+#villaCanvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block;opacity:0;transition:opacity 1.4s}
+#villaCanvas.on{opacity:1}
+.scene-paper,.scene-vignette,.branch{position:fixed;z-index:0;pointer-events:none;opacity:0;transition:opacity 1.4s}
+.scene-paper{inset:0;background:var(--grain);mix-blend-mode:multiply}
+.scene-vignette{inset:0;background:radial-gradient(120% 90% at 50% 46%,transparent 52%,rgba(8,20,58,.55) 100%)}
+.branch{width:min(62vw,340px);height:auto}
+.branch.tl{left:-4%;top:-2%}
+.branch.br{right:-4%;bottom:-3%}
+html.villa-on .scene-paper{opacity:.55}
+html.villa-on .scene-vignette,html.villa-on .branch{opacity:1}
+html.villa-on body{background:#0d1a3d}
+html.novilla body{background:linear-gradient(180deg,#0d1a3d,#1c3266 55%,#2350a8)}
+
 /* ---------- Viñetas de la villa ---------- */
 .slot{position:relative;height:clamp(290px,46vh,540px);overflow:hidden}
 .slot .land{position:absolute;left:0;right:0;bottom:18%;width:100%;height:58%;filter:blur(1.4px);opacity:.85}
@@ -219,6 +233,12 @@ html.og .og-copy{display:block}
 .og-copy{display:none;position:absolute;right:70px;top:50%;z-index:5;transform:translateY(-50%) rotate(-.8deg);width:540px}
 </style>
 
+<!-- Escena de la villa: lienzo 3D pintado (villa.js), grano de papel, viñeta azul y ramas del primer plano -->
+<canvas id="villaCanvas" aria-hidden="true"></canvas>
+<div class="scene-paper" aria-hidden="true"></div>
+<div class="scene-vignette" aria-hidden="true"></div>
+<canvas id="branchTL" class="branch tl" aria-hidden="true"></canvas>
+<canvas id="branchBR" class="branch br" aria-hidden="true"></canvas>
 <div class="vignette" aria-hidden="true"></div>
 <canvas id="flurry" aria-hidden="true" hidden></canvas>
 
@@ -377,7 +397,9 @@ html.og .og-copy{display:block}
 <script src="js/pluma.js?v=7"></script>
 <script src="js/nieve.js?v=7"></script>
 <script src="js/invitacion.js?v=7"></script>
-<script src="js/villa.js?v=7"></script>
+<script src="js/acuarela.js?v=11"></script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js"}}</script>
+<script type="module" src="js/villa.js?v=17"></script>
 <script src="js/esfera.js?v=7"></script>
 <script src="js/trineo.js?v=7"></script>
 <script>
