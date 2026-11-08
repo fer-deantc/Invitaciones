@@ -161,12 +161,16 @@ footer{position:relative;z-index:3;padding:10px 16px calc(130px + env(safe-area-
 
 /* ---------- El trineo ---------- */
 #sleigh{position:fixed;left:0;top:0;z-index:8;width:380px;pointer-events:none;will-change:transform}
-#sleigh svg{display:block;width:100%;height:auto;overflow:visible}
+#sleigh canvas{display:block;width:100%;height:auto}
+#sleigh .f1{position:absolute;left:0;top:0;animation:gallopB .3s steps(1) infinite}
+#sleigh .f0{animation:gallopA .3s steps(1) infinite}
+@keyframes gallopA{0%{opacity:1}50%{opacity:0}}
+@keyframes gallopB{0%{opacity:0}50%{opacity:1}}
 
 /* ---------- Entrada: la esfera sobre la mesa ---------- */
-#gate{--p:0;position:fixed;inset:0;z-index:10;overflow:hidden;background:var(--sand);color:var(--ink)}
-#room{position:absolute;inset:-3%;width:106%;height:106%;filter:blur(3.2px) saturate(.95);transform:scale(calc(1 + var(--p) * .2));transform-origin:50% 40%}
-#gate::before{content:"";position:absolute;inset:0;background:radial-gradient(70% 50% at 50% 42%,rgba(255,236,190,.35),transparent 70%),linear-gradient(180deg,rgba(43,31,22,.08),rgba(43,31,22,.18));pointer-events:none;z-index:1}
+#gate{--p:0;position:fixed;inset:0;z-index:10;overflow:hidden;background:#16244d;color:var(--ink)}
+#room{position:absolute;inset:-3%;width:106%;height:106%;filter:blur(3.4px);transform:scale(calc(1 + var(--p) * .2));transform-origin:50% 40%}
+#gate::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 42% at 50% 40%,rgba(255,206,130,.28),transparent 70%),radial-gradient(120% 90% at 50% 45%,transparent 55%,rgba(8,20,58,.55) 100%);pointer-events:none;z-index:1}
 #table{position:absolute;left:0;right:0;top:var(--table,70%);bottom:0;width:100%;height:calc(100% - var(--table,70%));z-index:1}
 .gift-tag{position:absolute;left:50%;top:calc(clamp(16px,4vh,40px) + env(safe-area-inset-top,0px));z-index:4;transform:translateX(-50%) rotate(-1deg);width:max-content;max-width:calc(100% - 32px);margin:0;padding:12px 22px;text-align:center;
   font-family:var(--fell);font-style:italic;font-size:clamp(1.05rem,4.4vw,1.35rem);line-height:1.25;color:var(--ink);background:var(--grain),var(--cream);opacity:calc(1 - var(--p) * 4)}
@@ -233,12 +237,10 @@ html.og .og-copy{display:block}
 .og-copy{display:none;position:absolute;right:70px;top:50%;z-index:5;transform:translateY(-50%) rotate(-.8deg);width:540px}
 </style>
 
-<!-- Escena de la villa: lienzo 3D pintado (villa.js), grano de papel, viñeta azul y ramas del primer plano -->
+<!-- Escena de la villa: lienzo 3D pintado (villa.js), grano de papel y viñeta azul -->
 <canvas id="villaCanvas" aria-hidden="true"></canvas>
 <div class="scene-paper" aria-hidden="true"></div>
 <div class="scene-vignette" aria-hidden="true"></div>
-<canvas id="branchTL" class="branch tl" aria-hidden="true"></canvas>
-<canvas id="branchBR" class="branch br" aria-hidden="true"></canvas>
 <div class="vignette" aria-hidden="true"></div>
 <canvas id="flurry" aria-hidden="true" hidden></canvas>
 
@@ -393,15 +395,15 @@ html.og .og-copy{display:block}
 
 <script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js"></script>
 <script src="config.js?v=7"></script>
-<script src="js/sonido.js?v=7"></script>
+<script src="js/sonido.js?v=8"></script>
 <script src="js/pluma.js?v=7"></script>
-<script src="js/nieve.js?v=7"></script>
+<script src="js/acuarela.js?v=14"></script>
+<script src="js/nieve.js?v=8"></script>
 <script src="js/invitacion.js?v=7"></script>
-<script src="js/acuarela.js?v=11"></script>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js"}}</script>
-<script type="module" src="js/villa.js?v=17"></script>
-<script src="js/esfera.js?v=7"></script>
-<script src="js/trineo.js?v=7"></script>
+<script type="module" src="js/villa.js?v=18"></script>
+<script src="js/esfera.js?v=8"></script>
+<script src="js/trineo.js?v=8"></script>
 <script>
   // marcos a mano, guirnaldas y el letrero, cuando ya cargaron las tipografías
   POSADA.decorate();

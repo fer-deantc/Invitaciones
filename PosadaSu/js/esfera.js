@@ -68,63 +68,37 @@
 
   /* ---------- Dibujo de la esfera ---------- */
   const ground = x => .5 + .16 * x * x;   // superficie de la nieve adentro, en radios
+  // Todo pintado en acuarela y tinta, como la villa (acuarela.js); aquí solo se coloca.
+  const A = P.paint;
+  const img = (svg, canvas, x, y, w, h) => P.el('image', { href: canvas.toDataURL(), x, y, width: w, height: h, preserveAspectRatio: 'none' }, svg);
   function paint() {
+    // adentro: noche, nieve, cabañita, dos pinos y Teddy
     const back = $('#globeBack'); back.innerHTML = '';
-    const pen = P.pen(back);
-    const defs = P.el('defs', {}, back);
-    const clip = P.el('clipPath', { id: 'clipGlobe' }, defs); P.el('circle', { cx: 200, cy: 200, r: 192 }, clip);
-    const inside = P.el('g', { 'clip-path': 'url(#clipGlobe)' }, back);
-    pen.rect(-10, -10, 420, 420, { fill: C.sky, fillStyle: 'solid', stroke: 'none' }, inside);
-    P.hills(pen, inside, 400, 268, '#cfd4cc', 4);
-    let mound = 'M-10,410 ';
-    for (let i = 0; i <= 40; i++) { const x = -1 + i / 20; mound += `L${(200 + 196 * x).toFixed(1)},${(200 + 196 * ground(x)).toFixed(1)} `; }
-    mound += 'L410,410 Z';
-    const h = P.house(pen, inside, 148, 312, 84, 54, { roof: C.wine, wall: C.sand, rows: 3, windows: [[.12, .3, .2, .26], [.68, .3, .2, .26]], doorX: .41, wreath: true, bricks: false });
-    if (h.smoke) P.smoke(pen, inside, h.smoke[0], h.smoke[1], 1.2);
-    P.tree(pen, inside, 104, 318, 74, { orn: true });
-    P.tree(pen, inside, 300, 322, 70, { orn: true });
-    pen.path(mound, { fill: C.snow, fillStyle: 'solid', strokeWidth: 1.2 }, inside);
-    pen.path('M80,348 q30,-6 60,-1 M230,352 q40,-7 80,-2 M140,372 q40,-5 90,0', { strokeWidth: .7, stroke: '#9aa19a' }, inside);
-    // curvatura del vidrio: achurado en el borde derecho
-    pen.hatch([[300, 60], [360, 120], [392, 200], [372, 300], [320, 360], [352, 260], [356, 180], [338, 110]], { op: .35, hachureAngle: 50 }, inside);
-
+    const inside = A.globeInside(ground);
+    img(back, inside, 0, 0, 400, 400);
+    // humo de la chimenea (mismo movimiento de siempre: clases smoke/puff)
+    const sm = P.el('g', { class: 'smoke', transform: `translate(${inside.smoke[0].toFixed(1)},${inside.smoke[1].toFixed(1)}) scale(1.4)` }, back);
+    const puffC = A.smoke();
+    for (let k = 0; k < 3; k++) { const pg = P.el('g', { class: 'puff', style: `animation-delay:${-k * 1.6}s` }, sm); img(pg, puffC, -9, -14, 18, 18); }
+    // el vidrio
     const front = $('#globeFront'); front.innerHTML = '';
-    const pf = P.pen(front);
-    pf.path('M70,160 q20,-70 92,-100', { stroke: C.snow, strokeWidth: 6, roughness: .6 });
-    pf.path('M64,196 q-2,-14 2,-26', { stroke: C.snow, strokeWidth: 4, roughness: .5 });
-    pf.circle(200, 200, 388, { strokeWidth: 2, roughness: .7 });
-    pf.circle(200, 200, 380, { strokeWidth: .8, roughness: .9 });
-
-    // base sencilla con placa
+    img(front, A.globeGlass(), 0, 0, 400, 400);
+    // la base de caoba con placa dorada
     const base = $('#globeBase'); base.innerHTML = '';
-    const pb = P.pen(base);
-    pb.ellipse(200, 22, 250, 30, { fill: C.brownD, fillStyle: 'solid' });
-    pb.fill([[76, 24], [324, 24], [352, 128], [48, 128]], C.brown, { strokeWidth: 1.4 });
-    pb.hatch([[230, 26], [324, 24], [352, 128], [270, 128]], { op: .5 });
-    pb.rect(36, 126, 328, 22, { fill: C.brownD, fillStyle: 'solid' });
-    pb.line(78, 40, 322, 40, { stroke: C.goldL, strokeWidth: 2.2, roughness: .5 });
-    pb.ellipse(200, 86, 150, 48, { fill: C.goldL, fillStyle: 'solid', strokeWidth: 1.2 });
-    pb.ellipse(200, 86, 136, 38, { strokeWidth: .7 });
-    P.el('text', { x: 200, y: 84, 'text-anchor': 'middle', 'font-family': 'IM Fell English SC, Georgia, serif', 'font-size': 18, fill: C.ink }, base).textContent = 'Posada';
-    P.el('text', { x: 200, y: 102, 'text-anchor': 'middle', 'font-family': 'IM Fell English, Georgia, serif', 'font-style': 'italic', 'font-size': 10.5, fill: C.ink }, base).textContent = P.plaqueDate || 'MMXXVI';
-
-    // rayos de luz alrededor
+    img(base, A.globeBase(P.plaqueDate), 0, 0, 400, 160);
+    // rayos de luz dorados (mismo parpadeo: clase ray)
     const rays = $('#globeRays'); rays.innerHTML = '';
-    const pr = P.pen(rays);
+    const defs = P.el('defs', {}, rays), rg = P.el('radialGradient', { id: 'rayGlow' }, defs);
+    P.el('stop', { offset: '0', 'stop-color': '#ffd27a', 'stop-opacity': '.35' }, rg); P.el('stop', { offset: '1', 'stop-color': '#ffd27a', 'stop-opacity': '0' }, rg);
+    P.el('circle', { cx: 250, cy: 250, r: 250, fill: 'url(#rayGlow)' }, rays);
     for (let i = 0; i < 14; i++) {
       const a = -Math.PI * .95 + i / 13 * Math.PI * .9 + (i % 2 ? .05 : -.05), r1 = 222 + (i % 3) * 8, r2 = r1 + 26 + (i % 2) * 14;
       const g = P.el('g', { class: 'ray', style: `animation-delay:${-i * .4}s` }, rays);
-      pr.line(250 + Math.cos(a) * r1, 250 + Math.sin(a) * r1, 250 + Math.cos(a) * r2, 250 + Math.sin(a) * r2, { stroke: i % 2 ? C.gold : C.ink, strokeWidth: 1.6, roughness: .6 }, g);
+      P.el('line', { x1: 250 + Math.cos(a) * r1, y1: 250 + Math.sin(a) * r1, x2: 250 + Math.cos(a) * r2, y2: 250 + Math.sin(a) * r2, stroke: i % 2 ? '#f6c453' : '#ffe39a', 'stroke-width': i % 2 ? 3 : 2, 'stroke-linecap': 'round', opacity: .9 }, g);
     }
-
-    // la mesa (en primer plano, sin desenfoque)
+    // la mesa de nogal
     const table = $('#table'); table.innerHTML = '';
-    const pt = P.pen(table);
-    pt.rect(-20, 0, 1040, 400, { fill: C.brown, fillStyle: 'solid', stroke: 'none' });
-    pt.line(-20, 2, 1020, 2, { strokeWidth: 2.2 });
-    pt.line(-20, 12, 1020, 12, { strokeWidth: .8 });
-    for (let i = 0; i < 9; i++) pt.path(`M-20,${40 + i * 36} q260,${i % 2 ? 6 : -6} 520,0 q260,${i % 2 ? -6 : 6} 520,0`, { strokeWidth: .6, stroke: C.brownD, roughness: 1.4 });
-    pt.hatch([[-20, 14], [1020, 14], [1020, 60], [-20, 60]], { op: .35, hachureAngle: -20 });
+    img(table, A.tableTop(), 0, 0, 1000, 400);
   }
 
   /* ---------- Nieve dentro de la esfera (2D) ---------- */
@@ -187,8 +161,8 @@
     }
   }
   // copos de pluma: punto blanco con contorno café
-  const sprite = (fill) => { const c = document.createElement('canvas'); c.width = c.height = 32; const g = c.getContext('2d'); g.beginPath(); g.arc(16, 16, 12, 0, 6.283); g.fillStyle = fill; g.fill(); g.lineWidth = 3; g.strokeStyle = 'rgba(43,31,22,.7)'; g.stroke(); return c; };
-  const FLAKE = sprite('#fbf8f1'), GLIT = sprite('#dfc07a');
+  const sprite = (rgb) => { const c = document.createElement('canvas'); c.width = c.height = 32; const g = c.getContext('2d'), gr = g.createRadialGradient(16, 16, 0, 16, 16, 15); gr.addColorStop(0, `rgba(${rgb},1)`); gr.addColorStop(.55, `rgba(${rgb},.9)`); gr.addColorStop(1, `rgba(${rgb},0)`); g.fillStyle = gr; g.fillRect(0, 0, 32, 32); return c; };
+  const FLAKE = sprite('251,248,240'), GLIT = sprite('255,220,140');
   let cw = 0;
   function sizeCanvas(scale = 1) {
     const w = sphere.offsetWidth, dpr = Math.min(window.devicePixelRatio || 1, 2);

@@ -126,6 +126,21 @@
       n.connect(lp).connect(gn).connect(sfx); n.start(t); n.stop(t + .12);
     },
 
+    // viento que pasa de derecha a izquierda, junto con el trineo
+    wind(sec = 5) {
+      if (!ac) return;
+      const t = ac.currentTime, n = noise(sec + .2), bp = ac.createBiquadFilter(), bp2 = ac.createBiquadFilter(), g = ac.createGain();
+      bp.type = 'bandpass'; bp.Q.value = 1.4; bp2.type = 'bandpass'; bp2.Q.value = 3;
+      bp.frequency.setValueAtTime(300, t); bp.frequency.exponentialRampToValueAtTime(900, t + sec * .45); bp.frequency.exponentialRampToValueAtTime(260, t + sec);
+      bp2.frequency.setValueAtTime(700, t); bp2.frequency.linearRampToValueAtTime(1500, t + sec * .5); bp2.frequency.linearRampToValueAtTime(600, t + sec);
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.32, t + sec * .4); g.gain.exponentialRampToValueAtTime(.0001, t + sec);
+      let out = g;
+      if (ac.createStereoPanner) { const pan = ac.createStereoPanner(); pan.pan.setValueAtTime(.9, t); pan.pan.linearRampToValueAtTime(-.9, t + sec); g.connect(pan); out = pan; }
+      n.connect(bp); n.connect(bp2); bp.connect(g); bp2.connect(g);
+      out.connect(sfx); g.connect(verb);
+      n.start(t); n.stop(t + sec + .2);
+    },
+
     clink() {
       if (!ac) return;
       const t = ac.currentTime + .01;

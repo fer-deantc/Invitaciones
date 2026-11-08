@@ -204,7 +204,7 @@
       wash(g, [[A1[0] + 1, A1[1] + 2], [fx + w + 2, top - 1], [fx + w + dx + 2, top + dy - 1], [A1[0] + dx + 1, A1[1] + dy + 2]], K.snowB, .95);
       wash(g, [[A1[0], A1[1] - 1], [fx - 5, top + 3], [fx - 2, top + 6], [A1[0], A1[1] + 5]], K.snowLit, .95);
       ink(g, [[fx - 5, top + 3], A1, [fx + w + 5, top + 3], [fx + w + dx + 5, top + dy + 3], [A1[0] + dx, A1[1] + dy], A1], .8);
-      windowLit(g, A1[0] - 5, top - rh * .55, 10, 11, { teddy: o.teddy && floors === 1 });
+      if (o.teddy && floors === 1) windowLit(g, A1[0] - 9, top - rh * .7, 18, 18, { teddy: true }); else windowLit(g, A1[0] - 5, top - rh * .55, 10, 11, {});
       smoke = [fx + w * .78 + dx * .5, top - rh * .7 + dy * .5];
     } else {
       const R = [[fx - 6, top + 3], [fx + w + 6, top + 3], [fx + w + dx * .55 + 4, top - rh], [fx + dx * .55 - 4, top - rh]];
@@ -412,28 +412,39 @@
   };
 
   /* ---------- Teddy, el yorkie ---------- */
+  // Yorkie: lomo gris acero con pelo largo y sedoso, cara y patas doradas, orejitas paradas y moño rojo
   function teddyBody(g, x, y, s, frame, sit) {
     g.save(); g.translate(x, y); g.scale(s, s);
-    const steel = '#6f7a8c', tan = '#c98d4a';
+    const steel = '#5c687e', steelL = '#8b97ad', tan = '#c98a45', tanL = '#e2ac68', bow = '#c0282f';
+    const ear = (ex, ey, k) => { wash(g, [[ex - 1.4 * k, ey], [ex, ey - 4.6 * k], [ex + 1.6 * k, ey]], tan, 1, { j: .2, ew: .5 }); dab(g, ex, ey - 1.6 * k, .5 * k, 1.4 * k, '#e8b98a', .9); };
     if (sit) {
-      dab(g, 0, -7, 5, 6, steel, 1); dab(g, 0, -3, 4.4, 3.6, tan, 1);
-      dab(g, 1, -14, 4, 3.6, tan, 1); dab(g, 3.8, -13.4, 2, 1.4, tan, 1); dab(g, 5.4, -13.6, .7, .7, '#1a1a1a', 1);
-      wash(g, [[-2.6, -16], [-1.6, -21], [-.2, -16]], tan, 1, { edge: false }); wash(g, [[1.4, -16.4], [2.6, -21], [3.4, -16]], tan, 1, { edge: false });
-      dab(g, .6, -18.2, 1.5, .9, '#c0282f', 1);
-      brush(g, -4.6, -6, -7.5 - (frame ? 1.5 : -1), -12, 1.6, steel, 1);
-      dab(g, -1.5, -.6, 1.4, 1, tan, 1); dab(g, 1.8, -.6, 1.4, 1, tan, 1);
+      // sentado, de frente
+      dab(g, -2, -1, 2.2, 1.4, tan, 1); dab(g, 2.4, -1, 2.2, 1.4, tan, 1);
+      wash(g, [[-5.4, -1.5], [5.4, -1.5], [4.2, -9.5], [-4.2, -9.5]], steel, 1, { j: .4, ew: .6 });
+      for (let k = 0; k < 7; k++) brush(g, -4 + k * 1.35, -9, -4.4 + k * 1.45, -1.2, .7, k % 2 ? steelL : steel, .9);
+      dab(g, 0, -5, 2.2, 3.4, tanL, .85);
+      brush(g, 4.6, -6, 7.5 + (frame ? 1.6 : -.4), -11.5 - (frame ? 0 : 1), 1.6, steel, 1);
+      dab(g, 0, -12.6, 4.2, 3.8, tan, 1); dab(g, 0, -11, 2.6, 2.2, tanL, .9);
+      ear(-2.8, -15, 1); ear(2.8, -15, 1);
+      dab(g, -1.4, -13, .7, .7, '#15110e', 1); dab(g, 1.4, -13, .7, .7, '#15110e', 1); dab(g, 0, -11.2, .9, .65, '#15110e', 1);
+      dab(g, -1, -16.2, 1.5, .9, bow, 1, .4); dab(g, 1, -16.2, 1.5, .9, bow, 1, -.4); dab(g, 0, -16.2, .6, .6, '#8f1c22', 1);
+      ink(g, [[-5.4, -1.5], [-4.6, -9], [-3.6, -14], [0, -16.4], [3.6, -14], [4.6, -9], [5.4, -1.5]], .45, false, .6);
     } else {
-      const l = frame ? 3.2 : 1.2;
-      for (const lx of [-4, -2, 3, 5]) brush(g, lx, -4, lx + (lx < 0 ? -l : l) * (frame ? 1 : -1) * .6, 0, 1.4, tan, 1);
-      dab(g, 0, -6, 7, 3.6, steel, 1); dab(g, 6.8, -8, 3.4, 3, tan, 1); dab(g, 9.6, -7.4, 1.4, 1, tan, 1); dab(g, 10.6, -7.6, .6, .6, '#1a1a1a', 1);
-      wash(g, [[5, -10], [5.6, -14.6], [6.8, -10.4]], tan, 1, { edge: false }); wash(g, [[7.2, -10.6], [8.4, -14.6], [9, -10.2]], tan, 1, { edge: false });
-      dab(g, 7, -11.4, 1.4, .9, '#c0282f', 1);
-      brush(g, -6.4, -7, -9, -10 - (frame ? 2.5 : 0), 1.5, steel, 1);
+      // corriendo, de perfil hacia la derecha
+      const a = frame ? 3 : -1;
+      [[-5, -a], [-3, a], [3.5, a], [5.5, -a]].forEach(([lx, d]) => brush(g, lx, -3.5, lx + d * .6, 0, 1.5, tan, 1));
+      wash(g, [[-7.5, -4], [5.5, -4], [6.5, -8.6], [-6.5, -9.2]], steel, 1, { j: .4, ew: .6 });
+      for (let k = 0; k < 8; k++) brush(g, -6.6 + k * 1.6, -8.6, -7 + k * 1.6, -3, .7, k % 2 ? steelL : steel, .9);
+      brush(g, -7, -8, -9.5, -12.5 - (frame ? 1.4 : 0), 1.6, steel, 1);
+      dab(g, 7.6, -9.6, 3.6, 3.2, tan, 1); dab(g, 10.4, -8.8, 1.8, 1.3, tanL, 1); dab(g, 11.8, -9.2, .7, .6, '#15110e', 1); dab(g, 8.6, -10.6, .6, .6, '#15110e', 1);
+      ear(6.2, -12.2, .95); ear(8.6, -12.4, .95);
+      dab(g, 7.2, -13.2, 1.4, .8, bow, 1, .4); dab(g, 8.8, -13.2, 1.4, .8, bow, 1, -.4);
+      ink(g, [[-7.5, -4], [-6.5, -9.2], [4, -9.4], [6.5, -12], [10.5, -11], [12, -9], [10, -7.6], [6, -6.5], [5.5, -4]], .45, false, .6);
     }
     g.restore();
   }
-  A.teddy = (frame, sit) => { A.seed(41); const [c, g] = cv(28, 24); teddyBody(g, sit ? 14 : 12, 22, 1, frame, sit); return c; };
-  function teddyInWindow(g, x, y, w) { const s = w / 14; teddyBody(g, x, y, s * .8, 0, true); }
+  A.teddy = (frame, sit) => { A.seed(41); const [c, g] = cv(40, 34); teddyBody(g, sit ? 20 : 17, 31, 1.45, frame, sit); grain(g, 40, 34, .3); return c; };
+  function teddyInWindow(g, x, y, w) { const s = w / 18; teddyBody(g, x, y, s, 0, true); }
 
   /* ---------- Osos de peluche (genéricos) con gorro y suéter Fair Isle ---------- */
   function bear(g, x, y, s, sweater, hat, scarf) {
@@ -629,4 +640,174 @@
     return c;
   };
   A.snowball = () => { const [c, g] = cv(10, 10); dab(g, 5, 5, 3.6, 3.6, K.snowLit, 1); ink(g, [[1.6, 5], [5, 1.6], [8.4, 5], [5, 8.4], [1.6, 5]], .4, true, .6); return c; };
+
+  /* =========================================================
+     PANTALLA DE APERTURA — misma acuarela y tinta que la villa
+     ========================================================= */
+  // la sala navideña de noche (se desenfoca con CSS)
+  A.room = () => {
+    A.seed(301); const W = 400, H = 820, [c, g] = cv(W, H);
+    g.fillStyle = '#16244d'; g.fillRect(0, 0, W, H);
+    for (let i = 0; i < 70; i++) dab(g, rnd() * W, rnd() * 520, 30 + rnd() * 60, 18 + rnd() * 40, rnd() < .5 ? '#1f3266' : '#122046', .35, rnd() * 3);
+    for (let y = 30; y < 470; y += 34) for (let x = 14 + (y / 34 % 2) * 17; x < W; x += 34) dab(g, x, y, 1.6, 1.6, K.goldD, .35);
+    glow(g, 330, 150, 210, '255,190,100', .32); glow(g, 60, 560, 200, '255,170,80', .22);
+    // ventana con nieve y cortinas borgoña
+    const sky = g.createLinearGradient(0, 120, 0, 360); sky.addColorStop(0, '#0d1a3d'); sky.addColorStop(1, '#2a58b0');
+    g.fillStyle = sky; g.fillRect(24, 120, 120, 230);
+    for (let i = 0; i < 46; i++) dab(g, 28 + rnd() * 112, 124 + rnd() * 222, 1.4 + rnd() * 1.4, 1.4 + rnd() * 1.4, K.snowLit, .9);
+    dab(g, 84, 340, 60, 12, K.snowB, .9);
+    brush(g, 84, 120, 84, 350, 4, K.cream, .95); brush(g, 24, 236, 144, 236, 4, K.cream, .95);
+    ink(g, [[24, 120], [144, 120], [144, 350], [24, 350], [24, 120]], 1.1, true);
+    for (const [x0, x1] of [[4, 44], [124, 168]]) { wash(g, [[x0, 96], [x1, 96], [x1 + 4, 380], [x0 - 4, 380]], K.burg, 1); for (let k = 0; k < 6; k++) brush(g, x0 + 4 + k * (x1 - x0) / 6, 100, x0 + 2 + k * (x1 - x0) / 6, 376, 2.2, shade(K.burg, .7), .5); brush(g, x0 - 2, 250, x1 + 2, 254, 3, K.gold, .95); }
+    // lambrín de nogal (sin franjas verdes)
+    wash(g, [[0, 470], [W, 470], [W, 640], [0, 640]], '#5a3b26', 1, { edge: false });
+    for (let x = 12; x < W; x += 96) ink(g, [[x, 492], [x + 76, 492], [x + 76, 622], [x, 622], [x, 492]], .8, true, .5);
+    brush(g, 0, 470, W, 470, 5, '#7a5638', .9);
+    // chimenea con fuego, guirnalda y calcetas
+    wash(g, [[196, 500], [380, 500], [380, 340], [196, 340]], '#e6dcc8', 1);
+    wash(g, [[236, 500], [340, 500], [340, 392], [236, 392]], '#1a1210', 1);
+    glow(g, 288, 470, 110, '255,140,50', .7);
+    for (let i = 0; i < 8; i++) brush(g, 262 + rnd() * 52, 498, 262 + rnd() * 52, 430 + rnd() * 30, 6, i % 2 ? '#f39a32' : '#ffd36a', .9);
+    wash(g, [[184, 340], [392, 340], [392, 324], [184, 324]], '#d8ccb4', 1);
+    garland(g, [[186, 326], [240, 340], [290, 330], [340, 342], [392, 326]], 5);
+    [[214, K.burg], [262, K.cream], [312, K.racing], [356, K.burg]].forEach(([x, col]) => { wash(g, [[x - 6, 344], [x + 6, 344], [x + 6, 374], [x + 12, 384], [x - 4, 388], [x - 6, 374]], col, 1, { ew: .7 }); brush(g, x - 7, 346, x + 7, 346, 4, K.snowLit, 1); });
+    A.wreath(g, 288, 290, 20);
+    ink(g, [[196, 500], [196, 340], [380, 340], [380, 500]], .9);
+    // piso de nogal
+    wash(g, [[0, 640], [W, 640], [W, H], [0, H]], '#6a4a30', 1, { edge: false });
+    for (let y = 656; y < H; y += 22) brush(g, 0, y, W, y + (rnd() - .5) * 4, 1, '#4a3222', .6);
+    // árbol de Navidad encendido y regalos
+    const tree = A.bigTree(); g.drawImage(tree, 230, 330, 220, 364);
+    glow(g, 340, 520, 170, '255,200,110', .35);
+    const gifts = A.gifts(); g.drawImage(gifts, 250, 650, 170, 104);
+    grain(g, W, H, .35);
+    return c;
+  };
+  // la mesa de nogal en primer plano
+  A.tableTop = () => {
+    A.seed(303); const W = 1000, H = 400, [c, g] = cv(W, H);
+    g.fillStyle = '#5c3c26'; g.fillRect(0, 0, W, H);
+    for (let i = 0; i < 46; i++) brush(g, -20, 20 + rnd() * 380, W + 20, 20 + rnd() * 380, 2 + rnd() * 5, rnd() < .5 ? '#6e4a30' : '#4a3020', .45);
+    glow(g, 500, 60, 360, '255,180,90', .35);
+    brush(g, 0, 3, W, 3, 4, '#8a6242', .95);
+    ink(g, [[0, 6], [W, 6]], 1.2, false, .8);
+    g.save(); const sh = g.createLinearGradient(0, 8, 0, 70); sh.addColorStop(0, 'rgba(10,8,20,.4)'); sh.addColorStop(1, 'rgba(10,8,20,0)'); g.fillStyle = sh; g.fillRect(0, 8, W, 62); g.restore();
+    grain(g, W, H, .3);
+    return c;
+  };
+  // adentro de la esfera: noche, nieve, una cabañita, dos pinos y Teddy
+  A.globeInside = (ground) => {
+    A.seed(305); const W = 400, H = 400, [c, g] = cv(W, H);
+    g.save(); g.beginPath(); g.arc(200, 200, 194, 0, 6.2832); g.clip();
+    const sky = g.createLinearGradient(0, 0, 0, 320); sky.addColorStop(0, '#0f1d42'); sky.addColorStop(.6, '#2350a8'); sky.addColorStop(1, '#5a86d0');
+    g.fillStyle = sky; g.fillRect(0, 0, W, H);
+    for (let i = 0; i < 90; i++) { const x = rnd() * W, y = rnd() * 280, l = 18 + rnd() * 40; brush(g, x, y, x + l, y + (rnd() - .5) * 4, 4 + rnd() * 5, mix('#16295a', '#5a86d0', y / 300 * .7 + rnd() * .2), .3); }
+    for (let i = 0; i < 26; i++) dab(g, rnd() * W, rnd() * 220, .9, .9, '#fff6dc', .8);
+    dab(g, 296, 92, 16, 16, '#f4ecd2', 1); glow(g, 296, 92, 40, '210,220,255', .5);
+    // colinas lejanas
+    wash(g, [[0, 290], [60, 262], [120, 280], [200, 256], [280, 276], [350, 258], [400, 280], [400, 400], [0, 400]], '#9fb4df', .95);
+    // cabañita y pinos
+    const house = A.house({ seed: 911, type: 'cabin', w: 92, gable: 'front', wall: '#7a5638', roof: K.burg, garland: true });
+    g.drawImage(house, 200 - 100, 308 - 208, 200, 208);
+    const pine = A.pine({ seed: 31, snow: 1 });
+    g.drawImage(pine, 52, 214, 76, 126); g.drawImage(pine, 276, 222, 70, 117);
+    // la nieve del suelo (la misma curva donde se asienta la nieve)
+    g.beginPath(); g.moveTo(-5, 405);
+    for (let i = 0; i <= 40; i++) { const x = -1 + i / 20; g.lineTo(200 + 196 * x, 200 + 196 * ground(x)); }
+    g.lineTo(405, 405); g.closePath(); g.fillStyle = K.snowLit; g.fill();
+    for (let i = 0; i < 18; i++) dab(g, 40 + rnd() * 320, 330 + rnd() * 50, 20 + rnd() * 30, 4 + rnd() * 4, K.snowB, .5);
+    glow(g, 200, 318, 60, '255,190,100', .35);
+    // Teddy, sentado junto a la puerta
+    teddyBody(g, 262, 336, 1.6, 0, true);
+    // curvatura del vidrio: más azul en la orilla
+    const edge = g.createRadialGradient(200, 200, 120, 200, 200, 196); edge.addColorStop(0, 'rgba(20,40,100,0)'); edge.addColorStop(1, 'rgba(20,40,100,.45)');
+    g.fillStyle = edge; g.fillRect(0, 0, W, H);
+    g.restore();
+    grain(g, W, H, .3);
+    const hs = house.smoke;
+    c.smoke = [200 - 100 + hs[0] * 200, 308 - 208 + hs[1] * 208];
+    return c;
+  };
+  // el vidrio: reflejos pintados y contorno de tinta
+  A.globeGlass = () => {
+    A.seed(307); const W = 400, H = 400, [c, g] = cv(W, H);
+    g.save(); g.lineCap = 'round';
+    g.strokeStyle = 'rgba(255,255,255,.75)'; g.lineWidth = 9; g.beginPath(); g.arc(200, 200, 168, Math.PI * 1.08, Math.PI * 1.42); g.stroke();
+    g.lineWidth = 4; g.strokeStyle = 'rgba(255,255,255,.5)'; g.beginPath(); g.arc(200, 200, 168, Math.PI * 1.47, Math.PI * 1.52); g.stroke();
+    g.strokeStyle = 'rgba(255,190,100,.45)'; g.lineWidth = 7; g.beginPath(); g.arc(200, 200, 176, Math.PI * .12, Math.PI * .34); g.stroke();
+    g.restore();
+    dab(g, 118, 120, 8, 4, '#ffffff', .7, -.7);
+    const p = []; for (let k = 0; k <= 36; k++) { const a = k / 36 * 6.2832; p.push([200 + Math.cos(a) * 194, 200 + Math.sin(a) * 194]); }
+    ink(g, p, 1.6, true, .9); ink(g, p.map(([x, y]) => [200 + (x - 200) * .985, 200 + (y - 200) * .985]), .7, true, .5);
+    return c;
+  };
+  // la base de caoba con banda y placa doradas
+  A.globeBase = (date) => {
+    A.seed(309); const W = 400, H = 160, [c, g] = cv(W, H);
+    wash(g, (() => { const q = []; for (let k = 0; k <= 24; k++) { const a = Math.PI + k / 24 * Math.PI; q.push([200 + Math.cos(a) * 126, 22 + Math.sin(a) * 15]); } return q.concat([[326, 30], [74, 30]]); })(), '#3a1a12', 1);
+    const body = [[76, 24], [324, 24], [350, 128], [50, 128]];
+    wash(g, body, '#6e2a20', 1);
+    for (let k = 0; k < 14; k++) brush(g, 80 + k * 18, 28, 64 + k * 20, 126, 2, shade('#6e2a20', .75 + rnd() * .4), .35);
+    wash(g, [[236, 26], [324, 24], [350, 128], [272, 128]], 'rgba(20,10,30,1)', .3, { edge: false });
+    brush(g, 78, 40, 322, 40, 3.2, K.gold, .95); brush(g, 66, 118, 334, 118, 2.4, K.gold, .9);
+    wash(g, [[36, 128], [364, 128], [364, 148], [36, 148]], '#4a1c14', 1);
+    // placa dorada
+    const pl = []; for (let k = 0; k <= 28; k++) { const a = k / 28 * 6.2832; pl.push([200 + Math.cos(a) * 72, 84 + Math.sin(a) * 22]); }
+    wash(g, pl, K.gold, 1); glow(g, 186, 76, 40, '255,236,170', .4); ink(g, pl, .9, true, .8);
+    g.save(); g.fillStyle = '#3a2608'; g.textAlign = 'center';
+    g.font = '18px "IM Fell English SC", Georgia, serif'; g.fillText('Posada', 200, 84);
+    g.font = 'italic 10.5px "IM Fell English", Georgia, serif'; g.fillText(date || 'MMXXVI', 200, 100); g.restore();
+    // ramitos de acebo
+    for (const s of [-1, 1]) { const x = 200 + s * 96, y = 84; for (let k = 0; k < 3; k++) dab(g, x + s * (k * 7 - 4), y + (k - 1) * 4, 7, 3, k % 2 ? K.pine : K.racingL, 1, s * (k - 1) * .6); for (let k = 0; k < 3; k++) dab(g, x - s * 2 + k * 3, y - 2 + (k % 2) * 3, 2.2, 2.2, K.burgL, 1); }
+    ink(g, [[76, 24], [50, 128], [350, 128], [324, 24]], 1, false, .85); ink(g, [[36, 128], [36, 148], [364, 148], [364, 128]], .9, false, .8);
+    grain(g, W, H, .35);
+    return c;
+  };
+
+  /* =========================================================
+     SANTA EN SU TRINEO, con cuatro renos (dos cuadros de galope)
+     ========================================================= */
+  A.sleighTeam = (frame) => {
+    A.seed(401); const W = 440, H = 150, [c, g] = cv(W, H);
+    const fur = '#8a5e3c', belly = '#e8d6b8';
+    const deer = (x, y) => {
+      const l = frame ? 1 : -1;
+      [[-9, l * 7], [-5, -l * 5], [8, -l * 7], [12, l * 5]].forEach(([lx, d]) => { brush(g, x + lx, y - 10, x + lx + d, y + 1, 2, shade(fur, .8), 1); dab(g, x + lx + d, y + 1.6, 1.6, 1.1, '#2a1c14', 1); });
+      wash(g, [[x - 14, y - 9], [x + 14, y - 8], [x + 15, y - 18], [x - 13, y - 19]], fur, 1, { ew: .7 });
+      dab(g, x + 1, y - 9.5, 11, 2.6, belly, .85);
+      dab(g, x - 14, y - 17, 2.6, 2.2, belly, 1);
+      wash(g, [[x - 13, y - 18], [x - 20, y - 26], [x - 24, y - 24], [x - 17, y - 15]], fur, 1, { ew: .7 });
+      dab(g, x - 24, y - 26.5, 5.2, 3.4, fur, 1); dab(g, x - 28.4, y - 26, 1.6, 1.4, '#2a1c14', 1); dab(g, x - 23, y - 28, .7, .7, '#15110e', 1);
+      ink(g, [[x - 21, y - 29], [x - 19, y - 36], [x - 15, y - 41]], .9, false, .9); ink(g, [[x - 19, y - 35], [x - 14, y - 36]], .7, false, .9);
+      ink(g, [[x - 24, y - 29], [x - 27, y - 36], [x - 31, y - 40]], .9, false, .9); ink(g, [[x - 27, y - 35], [x - 32, y - 34]], .7, false, .9);
+      brush(g, x - 15, y - 19, x - 9, y - 12, 2.2, K.burg, 1); dab(g, x - 12, y - 14, 2, 2, K.gold, 1);
+      ink(g, [[x - 14, y - 9], [x - 13, y - 19], [x + 15, y - 18], [x + 14, y - 8]], .55, false, .55);
+    };
+    const team = [[54, 92], [112, 82], [170, 92], [228, 82]];
+    team.forEach(([x, y]) => deer(x, y - (frame ? 2 : 0)));
+    ink(g, [[60, 76], [118, 66], [176, 76], [234, 66], [290, 84], [316, 90]], .7, false, .7);
+    // trineo borgoña con dorado
+    const sx = 300, sy = 34;
+    wash(g, [[sx + 8, sy + 52], [sx + 2, sy + 30], [sx + 14, sy + 18], [sx + 26, sy + 22], [sx + 34, sy + 34], [sx + 92, sy + 34], [sx + 100, sy + 18], [sx + 116, sy + 20], [sx + 112, sy + 40], [sx + 96, sy + 60], [sx + 18, sy + 62]], K.burg, 1);
+    wash(g, [[sx + 82, sy + 36], [sx + 110, sy + 36], [sx + 104, sy + 58], [sx + 80, sy + 60]], 'rgba(20,10,30,1)', .3, { edge: false });
+    brush(g, sx + 10, sy + 48, sx + 96, sy + 48, 1.8, K.gold, .95);
+    g.save(); g.strokeStyle = K.gold; g.lineWidth = 2.6; g.lineCap = 'round'; g.beginPath(); g.moveTo(sx - 4, sy + 74); g.lineTo(sx + 98, sy + 74); g.quadraticCurveTo(sx + 122, sy + 74, sx + 118, sy + 56); g.stroke(); g.restore();
+    brush(g, sx + 22, sy + 62, sx + 20, sy + 74, 1.4, K.goldD, 1); brush(g, sx + 80, sy + 62, sx + 82, sy + 74, 1.4, K.goldD, 1);
+    ink(g, [[sx + 8, sy + 52], [sx + 2, sy + 30], [sx + 14, sy + 18], [sx + 26, sy + 22], [sx + 34, sy + 34], [sx + 92, sy + 34], [sx + 100, sy + 18], [sx + 116, sy + 20], [sx + 112, sy + 40], [sx + 96, sy + 60], [sx + 18, sy + 62]], .9, true, .85);
+    // costal y regalos
+    dab(g, sx + 76, sy + 26, 16, 14, K.camel, 1); ink(g, [[sx + 62, sy + 30], [sx + 70, sy + 12], [sx + 84, sy + 12], [sx + 92, sy + 30]], .6, false, .6);
+    wash(g, [[sx + 86, sy + 34], [sx + 100, sy + 34], [sx + 100, sy + 22], [sx + 86, sy + 22]], K.sage, 1); line(g, sx + 93, sy + 34, sx + 93, sy + 22, 1.4, 1, K.burg);
+    // Santa saludando
+    const x = sx + 46, y = sy + 34;
+    wash(g, [[x - 12, y + 2], [x + 12, y + 2], [x + 9, y - 22], [x - 9, y - 22]], '#b3202c', 1);
+    brush(g, x - 12, y + 1, x + 12, y + 1, 3, K.snowLit, 1); brush(g, x, y - 22, x, y, 2.4, K.snowLit, .95);
+    brush(g, x - 8, y - 20, x - 16, y - 34 - (frame ? 3 : 0), 4, '#b3202c', 1); dab(g, x - 16, y - 35 - (frame ? 3 : 0), 2.4, 2.4, '#2a1c14', 1);
+    dab(g, x, y - 29, 6, 6, K.skin[0], 1); dab(g, x, y - 24.5, 6.4, 5.4, K.snowLit, 1); dab(g, x + 1.5, y - 29, 1.2, 1, '#e58f80', .8);
+    wash(g, [[x - 6.6, y - 31], [x + 6.6, y - 31], [x + 10, y - 40], [x + 2, y - 39]], '#b3202c', 1, { ew: .6 }); brush(g, x - 7, y - 31, x + 7, y - 31, 2.6, K.snowLit, 1); dab(g, x + 11, y - 41, 2.6, 2.6, K.snowLit, 1);
+    ink(g, [[x - 12, y + 2], [x - 9, y - 22], [x + 9, y - 22], [x + 12, y + 2]], .6, false, .7);
+    // estela de chispas doradas
+    for (let i = 0; i < 16; i++) { const t = i / 16; glow(g, sx + 124 + t * 36, sy + 68 - t * 24 + (rnd() - .5) * 10, 6 - t * 4, '255,214,140', .6 - t * .4); }
+    grain(g, W, H, .3);
+    return c;
+  };
 })();

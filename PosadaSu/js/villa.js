@@ -375,10 +375,10 @@ async function build() {
   card(A.gifts(), 2.1, 2.6, 2.8);
   card(A.sled(true), 1.3, -4.8, -1.8);
   const tSit = [texOf(A.teddy(0, true)), texOf(A.teddy(1, true))];
-  const teddySit = card(tSit[0], .62, 2.2, 2.85, { y: 1.15 });
+  const teddySit = card(tSit[0], 1.05, 2.2, 3.1, { y: 1.05 });
   actors.push((dt, t) => { teddySit.material.map = tSit[Math.floor(t * 3) % 2]; });
   const tRun = [texOf(A.teddy(0, false)), texOf(A.teddy(1, false))];
-  const teddy = card(tRun[0], .56, 0, 0), teddySh = shadowFor(teddy, .6);
+  const teddy = card(tRun[0], 1, 0, 0), teddySh = shadowFor(teddy, .95);
   const tPath = [[-14, 6], [-6, 11.8], [4, 12.2], [13, 7]];
   const tl = [0]; for (let i = 1; i < tPath.length; i++) tl.push(tl[i - 1] + Math.hypot(tPath[i][0] - tPath[i - 1][0], tPath[i][1] - tPath[i - 1][1]));
   const tst = { s: 0, dir: 1, wait: 0 };

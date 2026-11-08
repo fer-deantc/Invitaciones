@@ -110,39 +110,14 @@
 
   /* ---------- Fondo de la sala navideña (dibujada y desenfocada) ---------- */
   P.paintRoom = function () {
-    const svg = $('#room'); if (!svg || !P.pen) return;
+    const svg = $('#room'); if (!svg || !P.paint) return;
+    if (svg.dataset.done) return;
+    svg.dataset.done = 1;
+    // la sala navideña de noche, en acuarela (acuarela.js); el CSS la desenfoca
+    const c = P.paint.room();
     svg.innerHTML = '';
-    const C = P.C, pen = P.pen(svg), el = P.el;
-    // muro con rayas suaves y lambrín verde
-    pen.rect(-10, -10, 420, 830, { fill: C.sand, fillStyle: 'solid', stroke: 'none' });
-    for (let x = 0; x < 400; x += 22) pen.line(x, 0, x, 470, { stroke: C.beige, strokeWidth: 5, roughness: .4 });
-    pen.rect(-10, 470, 420, 180, { fill: C.forest, fillStyle: 'solid' });
-    for (let x = 10; x < 400; x += 96) pen.rect(x, 490, 76, 130, { strokeWidth: .9, stroke: C.forestD });
-    pen.rect(-10, 640, 420, 190, { fill: C.brown, fillStyle: 'solid' });
-    // guirnalda de pino con foquitos arriba
-    pen.curve([[-10, 40], [100, 86], [200, 50], [300, 88], [410, 44]], { stroke: C.forest, strokeWidth: 9, roughness: .8 });
-    const bulbs = [C.wine, C.goldL, C.cream, C.goldL];
-    for (let i = 0; i < 18; i++) { const t = i / 17, x = -10 + 420 * t, y = 44 + Math.abs(Math.sin(t * Math.PI * 2)) * 38; pen.circle(x, y + 6, 10, { fill: bulbs[i % 4], fillStyle: 'solid', strokeWidth: .7 }); el('circle', { cx: x, cy: y + 6, r: 16, fill: C.glow, opacity: .35 }, svg); }
-    // ventana con nieve afuera y cortinas vino
-    pen.rect(24, 140, 120, 200, { fill: C.night, fillStyle: 'solid', strokeWidth: 2 });
-    for (let i = 0; i < 40; i++) pen.circle(30 + Math.random() * 108, 146 + Math.random() * 188, 3, { fill: C.snow, fillStyle: 'solid', stroke: 'none' });
-    pen.line(84, 140, 84, 340, { strokeWidth: 3 }); pen.line(24, 240, 144, 240, { strokeWidth: 3 });
-    pen.poly([[6, 120], [40, 120], [30, 360], [0, 360]], { fill: C.wine, fillStyle: 'solid' });
-    pen.poly([[128, 120], [162, 120], [168, 360], [138, 360]], { fill: C.wine, fillStyle: 'solid' });
-    // chimenea con fuego y calcetas
-    pen.rect(196, 340, 180, 150, { fill: C.wineD, fillStyle: 'solid' });
-    pen.rect(186, 326, 200, 18, { fill: C.brown, fillStyle: 'solid' });
-    pen.rect(236, 380, 100, 110, { fill: C.ink, fillStyle: 'solid' });
-    el('ellipse', { cx: 286, cy: 450, rx: 70, ry: 50, fill: C.fire, opacity: .55 }, svg);
-    pen.path('M256,486 q4,-40 22,-56 q-2,22 10,30 q6,-28 22,-40 q-4,30 6,66 z', { fill: C.fire, fillStyle: 'solid', strokeWidth: 1 });
-    pen.path('M272,486 q6,-24 16,-30 q2,14 8,18 q4,-12 10,-16 q0,18 2,28 z', { fill: C.goldL, fillStyle: 'solid', strokeWidth: .8 });
-    [[214, C.wine], [262, C.forest], [312, C.wine], [352, C.forest]].forEach(([x, col]) => { pen.path(`M${x},344 v26 q0,8 -8,10 l-8,2 q-6,-8 2,-12 l4,-2 v-24 z`, { fill: col, fillStyle: 'solid', strokeWidth: .9 }); pen.rect(x - 9, 340, 11, 7, { fill: C.cream, fillStyle: 'solid', strokeWidth: .7 }); });
-    // árbol de Navidad grande y encendido
-    P.tree(pen, svg, 330, 660, 300, { orn: 'many', star: true, shadow: false });
-    for (let i = 0; i < 26; i++) { const t = Math.random(), x = 330 + (Math.random() - .5) * 220 * (1 - t * .8), y = 640 - t * 250; el('circle', { cx: x, cy: y, r: 9, fill: C.glow, opacity: .45 }, svg); }
-    // regalos bajo el árbol y un sillón
-    P.giftPile(pen, svg, 300, 690);
-    pen.path('M20,700 q0,-70 50,-70 h60 q40,0 40,70 v40 h-150 z', { fill: C.wine, fillStyle: 'solid', strokeWidth: 1.4 });
-    pen.hatch([[110, 640], [170, 650], [170, 740], [110, 740]], { op: .4 });
+    const im = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+    im.setAttribute('href', c.toDataURL('image/jpeg', .85)); im.setAttribute('x', 0); im.setAttribute('y', 0); im.setAttribute('width', 400); im.setAttribute('height', 820); im.setAttribute('preserveAspectRatio', 'none');
+    svg.appendChild(im);
   };
 })();
